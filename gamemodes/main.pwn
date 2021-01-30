@@ -7,6 +7,7 @@
 #include  <YSI\y_hooks>
 #include <ShowInfoForPlayer>
 #include <progress3D>
+#include <ShowObject>
 
 
 //------------------DEFINES-----------------//
@@ -34,7 +35,7 @@
 main ()
 {
     printf("//------------------------------------//");
-    printf("//-----------SINNOMBRE ROLEPLAY----------//");
+    printf("//-----------Samp X ROLEPLAY----------//");
     printf("//----------------BY------------------//");
     printf("//---------------Sleek----------------//");
 }
@@ -78,6 +79,8 @@ public OnPlayerConnect(playerid)
         InterpolateCameraLookAt(playerid, 50.0, 50.0, 10.0, -50.0, -50.0, -10.0, 15000, CAMERA_MOVE);
         SetTimerEx("KickearR", 1000, false, "d", playerid);
     }
+    CrearTDDeSIFP(playerid);
+    CrearTDShowObject(playerid);
     return 1;
 }
 
