@@ -8,5 +8,5 @@ Version 0.1
 -Objetos de loot. (Desarollando)
 
 -Moneda basica. (Proximamanete)
-....
+...
 
