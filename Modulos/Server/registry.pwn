@@ -4,7 +4,7 @@
     Fecha: 25/01/2021 - 20:03
 */
 
-
+#include "YSI\y_hooks"
 //------------------CALLBACKS-----------------//
 
 hook:r_OnGameModeInit()
@@ -136,7 +136,7 @@ hook:r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     mysql_format(Database, str, sizeof(str), "SELECT * FROM `usuarios` WHERE `Nombre` = '%e' LIMIT 1", CuentaInfo[playerid][Nombre]);
                     mysql_tquery(Database, str, "CargarCuenta", "i", playerid);
                     SetCameraBehindPlayer(playerid);
-                    SendClientMessage(playerid, -1, "{F9BB0A}[SAMP-X]: {FFFFFF}Bienvenido de nuevo!");
+                    SendClientMessage(playerid, -1, "{F9BB0A}[SampOut]: {FFFFFF}Bienvenido de nuevo!");
                     CuentaInfo[playerid][Logeado] = 1;
                     for(new i; i <15; i++)
                     {
@@ -227,7 +227,7 @@ hook:r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
             CuentaInfo[playerid][Logeado] = 1;
             SetSpawnInfo(playerid, 0, 250, 1550.4641,-2174.9314,13.5879, 0, 0, 0, 0, 0, 0, 0);
             SpawnPlayer(playerid);
-            SendClientMessage(playerid, -1, "{F9BB0A}[SAMP-X]: {FFFFFF}Bienvenido, puedes usar el comando /ayuda para obtener informacion sobre el servidor.");
+            SendClientMessage(playerid, -1, "{F9BB0A}[SampOut]: {FFFFFF}Bienvenido, puedes usar el comando /ayuda para obtener informacion sobre el servidor.");
             SetCameraBehindPlayer(playerid);
             for(new i = 0; i<15; i++)
             {
@@ -538,7 +538,7 @@ stock CargarLogin()
     TextDrawSetProportional(LoginTD[7], 1);
     TextDrawSetSelectable(LoginTD[7], 0);
 
-    LoginTD[8] = TextDrawCreate(314.000000, 274.000000, "SAMP-X");
+    LoginTD[8] = TextDrawCreate(314.000000, 274.000000, "SampOut");
     TextDrawFont(LoginTD[8], 1);
     TextDrawLetterSize(LoginTD[8], 0.229166, 1.649994);
     TextDrawTextSize(LoginTD[8], 298.500000, 75.000000);
@@ -751,7 +751,7 @@ stock CargarClave()
     TextDrawSetProportional(ClaveTD[10], 1);
     TextDrawSetSelectable(ClaveTD[10], 0);
 
-    ClaveTD[11] = TextDrawCreate(314.000000, 274.000000, "SAMP-X");
+    ClaveTD[11] = TextDrawCreate(314.000000, 274.000000, "SampOut");
     TextDrawFont(ClaveTD[11], 1);
     TextDrawLetterSize(ClaveTD[11], 0.229166, 1.649994);
     TextDrawTextSize(ClaveTD[11], 298.500000, 75.000000);
@@ -964,7 +964,7 @@ stock CargarEmail()
     TextDrawSetProportional(EmailTD[10], 1);
     TextDrawSetSelectable(EmailTD[10], 0);
 
-    EmailTD[11] = TextDrawCreate(314.000000, 274.000000, "SAMP-X");
+    EmailTD[11] = TextDrawCreate(314.000000, 274.000000, "SampOut");
     TextDrawFont(EmailTD[11], 1);
     TextDrawLetterSize(EmailTD[11], 0.229166, 1.649994);
     TextDrawTextSize(EmailTD[11], 298.500000, 75.000000);
@@ -1177,7 +1177,7 @@ stock CargarEdad()
     TextDrawSetProportional(EdadTD[10], 1);
     TextDrawSetSelectable(EdadTD[10], 0);
 
-    EdadTD[11] = TextDrawCreate(314.000000, 274.000000, "SAMP-X");
+    EdadTD[11] = TextDrawCreate(314.000000, 274.000000, "SampOut");
     TextDrawFont(EdadTD[11], 1);
     TextDrawLetterSize(EdadTD[11], 0.229166, 1.649994);
     TextDrawTextSize(EdadTD[11], 298.500000, 75.000000);

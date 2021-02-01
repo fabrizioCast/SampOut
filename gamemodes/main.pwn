@@ -2,13 +2,13 @@
 #include <a_mysql>
 #include <foreach>
 #include <sscanf2>
-#include <zcmd>
+#include <Pawn.CMD>
 #include <Pawn.Regex>
-#include  <YSI\y_hooks>
+#include <YSI\y_hooks>
 #include <ShowInfoForPlayer>
-#include <progress3D>
+#include <progress2>
 #include <ShowObject>
-
+#include <streamer>
 
 //------------------DEFINES-----------------//
 #undef MAX_PLAYERS
@@ -20,8 +20,10 @@
 #include "../Modulos/Server/DataStore.pwn"
 #include "../Modulos/Server/prox.pwn"
 #include "../Modulos/Server/registry.pwn"
+#include "../Modulos/Player/Needs.pwn"
 #include "../Modulos/Player/inventory.pwn"
 #include "../Modulos/Player/Commands.pwn"
+#include "../Modulos/Player/OinFloor.pwn"
 
 
 
@@ -114,6 +116,18 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid)
 	}
     return 0;
 }
+
+
+public OnPlayerCommandPerformed(playerid, cmd[], params[], result, flags)
+{
+    if(result == -1)
+    {
+        ShowInfoForPlayer(playerid, "~r~Error: ~w~Comando desconocido.", 3000);
+        return 0;
+    }
+    return 1;
+}
+
 
 //-----------------------FUNCIONES MYSQL-----------------------//
 forward KickearR(playerid);
