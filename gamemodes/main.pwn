@@ -1,5 +1,5 @@
 #include <a_samp>
-#include <a_mysql>
+#include <easy-mysql>
 #include <foreach>
 #include <sscanf2>
 #include <Pawn.CMD>
@@ -14,7 +14,6 @@
 #undef MAX_PLAYERS
 #define MAX_PLAYERS 100
 #define NOMBRE_SV "Samp-X 0.1"
-
 
 //------------------M O D U L O S-----------------//
 #include "../Modulos/Server/DataStore.pwn"
@@ -32,7 +31,7 @@
 #define mysql_host "localhost"
 #define mysql_user "root"
 #define mysql_pass ""
-#define mysql_database "ZombieRP"
+#define mysql_database "SampOut"
 //----------------------INICIO GAMEMODE---------------------//
 main ()
 {
@@ -45,17 +44,7 @@ main ()
 public OnGameModeInit()
 {
     //_______________MYSQL___________________//
-    Database = mysql_connect(mysql_host, mysql_user, mysql_pass, mysql_database);
-    if(Database == MYSQL_INVALID_HANDLE || mysql_errno(Database) != 0)
-    {
-        printf("[ERROR]: ERROR AL CONECTAR CON LA DATABASE!");
-        SendRconCommand("exit");
-        return 0;
-    }
-    else
-    {
-        printf("Conectado a la base de datos correctamente!");
-    }
+    SQL::Connect(mysql_host, mysql_user, mysql_pass, mysql_database);
     //___________NOMBRE DEL SV Y ESAS PELOTUDESES______________//
     SetGameModeText(NOMBRE_SV);
     return 1;
@@ -65,10 +54,33 @@ public OnPlayerConnect(playerid)
 { 
     if(strfind(GetName(playerid),"_", false) != -1 || !strcmp(GetName(playerid), "Sleek", false, 5))
     {
-        new str[128];
-        GetPlayerName(playerid, CuentaInfo[playerid][Nombre], MAX_PLAYER_NAME);
-        mysql_format(Database, str, sizeof(str), "SELECT * FROM `usuarios` WHERE `Nombre` = '%e' LIMIT 1", CuentaInfo[playerid][Nombre]);
-        mysql_tquery(Database, str, "OnPlayerDataCheck", "i", playerid);
+        if(SQL::RowExistsEx("usuarios", "Nombre", ret_pName(playerid)))
+        {
+            new handle = SQL::OpenEx(SQL::READ, "usuarios", "p_nombre", CuentaInfo[playerid][Nombre]);
+			SQL::ReadString(handle, "Password", CuentaInfo[playerid][Password], 65);
+            SQL::Close(handle);
+            for(new i; i <15; i++)
+            {
+                TextDrawShowForPlayer(playerid, LoginTD[i]);
+            }
+            for(new i; i <2; i++)
+            {
+                PlayerTextDrawShow(playerid, LoginTD2[playerid][i]);
+            }
+            SelectTextDraw(playerid, 0xF9BB0AFF);  
+        }
+        else
+        {
+            for(new i = 0; i<15; i++)
+            {
+                TextDrawShowForPlayer(playerid, ClaveTD[i]);
+            }
+            for(new i = 0; i<2; i++)
+            {
+                PlayerTextDrawShow(playerid, PlayerTD[playerid][i]);
+            }
+            SelectTextDraw(playerid, 0xF9BB0AFF); 
+        }
     }
     else
     {
@@ -88,13 +100,22 @@ public OnPlayerConnect(playerid)
 
 public OnPlayerDisconnect(playerid, reason)
 {
-    GuardarCuentas(playerid);
+    SaveAccount(playerid);
+    for(new i; i <15; i++)
+    {
+        TextDrawDestroy(LoginTD[i]);
+    }
+    for(new i; i <2; i++)
+    {
+        PlayerTextDrawDestroy(playerid, LoginTD2[playerid][i]);
+    }
+    printf("%s abandono", ret_pName(playerid));
 }
 public OnGameModeExit()
 {
     foreach(new i : Player)
     {
-        GuardarCuentas(i);
+        SaveAccount(i);
     }
     mysql_close(Database);
     return 0;
@@ -110,7 +131,7 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid)
         }
         else if(VE[playerid][inmenu] == true)
         {
-            SelectTextDraw(playerid,  0xFFFFFFAA);
+            closeInv(playerid);
             return 1;
         }
 	}
@@ -136,66 +157,36 @@ public KickearR(playerid)
     Kick(playerid);
     return 1;
 }
-forward OnPlayerDataCheck(playerid);
-public OnPlayerDataCheck(playerid)
+
+stock SaveAccount(playerid)
 {
-    new rows;
-    cache_get_row_count(rows);
-    if(rows > 0)
+    if(CuentaInfo[playerid][Logeado] == 1)
     {
-        cache_get_value(0, "Password", CuentaInfo[playerid][Password], 65);
-        for(new i; i <12; i++)
+        if(SQL::RowExists("usuarios", "ID", CuentaInfo[playerid][ID]))
         {
-            TextDrawShowForPlayer(playerid, LoginTD[i]);
+            CuentaInfo[playerid][Skin] = GetPlayerSkin(playerid);
+            GetPlayerPos(playerid, CuentaInfo[playerid][PosX], CuentaInfo[playerid][PosY], CuentaInfo[playerid][PosZ]);
+            new handle = SQL::Open(SQL::UPDATE, "usuarios", "ID", CuentaInfo[playerid][ID]);
+            SQL::WriteString(handle, "Nombre", ret_pName(playerid));
+            SQL::WriteString(handle, "Password", CuentaInfo[playerid][Password]);
+            SQL::WriteInt(handle, "Edad", CuentaInfo[playerid][Edad]);
+            SQL::WriteInt(handle, "Skin", CuentaInfo[playerid][Skin]);
+            SQL::WriteFloat(handle, "PosX", CuentaInfo[playerid][PosX]);
+            SQL::WriteFloat(handle, "PosY", CuentaInfo[playerid][PosY]);
+            SQL::WriteFloat(handle, "PosZ", CuentaInfo[playerid][PosZ]);
+            SQL::Close(handle);
+            printf("%s abandono exitoso", ret_pName(playerid));
+            CuentaInfo[playerid][Logeado] = 0;
         }
-        PlayerTextDrawShow(playerid, LoginTD2[playerid][1]);
-        SelectTextDraw(playerid, 0xF9BB0AFF);
+        printf("%s abandono mysql", ret_pName(playerid));
     }
-    else
-    {
-        for(new i = 0; i<15; i++)
-        {
-            TextDrawShowForPlayer(playerid, ClaveTD[i]);
-        }
-        for(new i = 0; i<2; i++)
-        {
-            PlayerTextDrawShow(playerid, PlayerTD[playerid][i]);
-        }
-        SelectTextDraw(playerid, 0xF9BB0AFF); 
-    }
+    printf("%s abandono logeado", ret_pName(playerid));
     return 1;
 }
-
-forward CargarCuenta(playerid);
-public CargarCuenta(playerid) 
+CMD:id(playerid)
 {
-	new rows;
-	cache_get_row_count(rows);
-	if(!rows) return 0;
-	else 
-    {
-		cache_get_value_int(0, "ID", CuentaInfo[playerid][ID]);
-		cache_get_value_int(0, "Edad", CuentaInfo[playerid][Edad]);
-		cache_get_value_float(0, "PosX", CuentaInfo[playerid][PosX]);
-		cache_get_value_float(0, "PosY", CuentaInfo[playerid][PosY]);
-		cache_get_value_float(0, "PosZ", CuentaInfo[playerid][PosZ]);
-        cache_get_value_int(0, "Skin", CuentaInfo[playerid][Skin]);
-        SetPlayerPos(playerid, CuentaInfo[playerid][PosX], CuentaInfo[playerid][PosY], CuentaInfo[playerid][PosZ]);
-        SetPlayerSkin(playerid, CuentaInfo[playerid][Skin]);
-        TogglePlayerControllable(playerid, 1);
-	}
-	return 1;
+    printf("ID: %d", CuentaInfo[playerid][ID]);
 }
-stock GuardarCuentas(playerid)
-{
-	new str[256];
-    CuentaInfo[playerid][Skin] = GetPlayerSkin(playerid);
-    GetPlayerPos(playerid, CuentaInfo[playerid][PosX], CuentaInfo[playerid][PosY], CuentaInfo[playerid][PosZ]);
-    mysql_format(Database, str, sizeof(str),"UPDATE `usuarios` SET `PosX` = %f, `PosY`= %f, `PosZ`= %f, `Skin` = %d WHERE `ID` = %d LIMIT 1", CuentaInfo[playerid][PosX], CuentaInfo[playerid][PosY], CuentaInfo[playerid][PosZ], CuentaInfo[playerid][Skin], CuentaInfo[playerid][ID]);
-    mysql_tquery(Database, str);
-	return 1;
-}
-
 stock GetName(playerid) 
 {
 	new namer[MAX_PLAYER_NAME];

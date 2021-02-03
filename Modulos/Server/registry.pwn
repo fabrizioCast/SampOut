@@ -132,9 +132,6 @@ hook:r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 }
                 else
                 {
-                    new str[128];
-                    mysql_format(Database, str, sizeof(str), "SELECT * FROM `usuarios` WHERE `Nombre` = '%e' LIMIT 1", CuentaInfo[playerid][Nombre]);
-                    mysql_tquery(Database, str, "CargarCuenta", "i", playerid);
                     SetCameraBehindPlayer(playerid);
                     SendClientMessage(playerid, -1, "{F9BB0A}[SampOut]: {FFFFFF}Bienvenido de nuevo!");
                     CuentaInfo[playerid][Logeado] = 1;
@@ -149,6 +146,13 @@ hook:r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                         PlayerTextDrawDestroy(playerid, LoginTD2[playerid][i]);
                     }
                     CancelSelectTextDraw(playerid);
+                    new handle = SQL::Open(SQL::READ, "usuarios", "ID", CuentaInfo[playerid][ID]);
+                    SQL::ReadInt(handle, "Edad", CuentaInfo[playerid][Edad]);
+                    SQL::ReadInt(handle, "Skin", CuentaInfo[playerid][Skin]);
+                    SQL::ReadFloat(handle, "PosX", CuentaInfo[playerid][PosX]);
+                    SQL::ReadFloat(handle, "PosY", CuentaInfo[playerid][PosY]);
+                    SQL::ReadFloat(handle, "PosZ", CuentaInfo[playerid][PosZ]);
+                    SQL::Close(handle);
                 }
             }
         }
@@ -221,21 +225,31 @@ hook:r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     {
         if(Pasos[playerid] == 3)
         {
-            new str[250];
-            mysql_format(Database, str, sizeof(str),"INSERT INTO `usuarios` (`Nombre`, `Password`, `Email`, `Edad`, `PosX`, `PosY`, `PosZ`, `Skin`) VALUES ('%e', '%s', '%s', '%d', '1550.4641', '-2174.9314', '13.5879', '250')", CuentaInfo[playerid][Nombre], CuentaInfo[playerid][Password], CuentaInfo[playerid][Email], CuentaInfo[playerid][Edad]);
-            mysql_tquery(Database, str);
+            new handle = SQL::Open(SQL::INSERT, "usuarios");
+			SQL::ToggleAutoIncrement(handle, true);
+            SQL::WriteString(handle, "Nombre", ret_pName(playerid));
+            SQL::WriteString(handle, "Password", CuentaInfo[playerid][Password]);
+            SQL::WriteString(handle, "Email",  CuentaInfo[playerid][Email]);
+            SQL::WriteInt(handle, "Edad", CuentaInfo[playerid][Edad]);
+            SQL::WriteInt(handle, "Skin", CuentaInfo[playerid][Skin]);
+            SQL::WriteFloat(handle, "PosX", CuentaInfo[playerid][PosX]);
+            SQL::WriteFloat(handle, "PosY", CuentaInfo[playerid][PosY]);
+            SQL::WriteFloat(handle, "PosZ", CuentaInfo[playerid][PosZ]);
+            CuentaInfo[playerid][ID] = SQL::Close(handle);
             CuentaInfo[playerid][Logeado] = 1;
             SetSpawnInfo(playerid, 0, 250, 1550.4641,-2174.9314,13.5879, 0, 0, 0, 0, 0, 0, 0);
             SpawnPlayer(playerid);
             SendClientMessage(playerid, -1, "{F9BB0A}[SampOut]: {FFFFFF}Bienvenido, puedes usar el comando /ayuda para obtener informacion sobre el servidor.");
             SetCameraBehindPlayer(playerid);
-            for(new i = 0; i<15; i++)
+            for(new i; i<15; i++)
             {
                 TextDrawHideForPlayer(playerid, EdadTD[i]);
+                TextDrawHideForPlayer(playerid, ClaveTD[i]);
             }
-            for(new i = 0; i<2; i++)
+            for(new i; i<2; i++)
             {
                 PlayerTextDrawHide(playerid, EdadTD2[playerid][i]);
+                PlayerTextDrawHide(playerid, PlayerTD[playerid][i]);
             }
             CancelSelectTextDraw(playerid);
         }
@@ -251,13 +265,12 @@ hook:r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     }
     return 1;
 }
-hook:r_OnPlayerDisconnect(playerid, reason)
+hook:OnPlayerDisconnect(playerid, reason)
 {
     //----Reset Login-------//
     PassYes[playerid] = 0;
     Pasos[playerid] = 0;
     MaxIntentos[playerid] = 0;
-    CuentaInfo[playerid][Logeado] = 0;
     //------------------------//
     return 1;
 }
@@ -314,6 +327,9 @@ IsNumeric(const string[])
 {
     return !sscanf(string, "{d}");
 }
+
+
+
 
 //-------------------------TEXTDRAW REGISTRO-----------------------//
 stock CargarClave2(playerid)
@@ -1019,7 +1035,7 @@ stock CargarEmail()
     TextDrawUseBox(EmailTD[14], 0);
     TextDrawSetProportional(EmailTD[14], 1);
     TextDrawSetSelectable(EmailTD[14], 0);
-    }
+}
 stock CargarEdad()
 {
     //Textdraws

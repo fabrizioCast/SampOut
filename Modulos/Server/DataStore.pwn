@@ -47,3 +47,10 @@ NombreJugador(playerid)
     }
     return N;
 }
+
+stock ret_pName(playerid)
+{
+    new name[24];
+    GetPlayerName(playerid, name, sizeof(name));
+    return name;
+}
