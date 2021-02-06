@@ -9,47 +9,48 @@ TimerShowobj[MAX_PLAYERS];
 
 stock CrearTDShowObject(playerid)
 {
-    mostrarobjeto[playerid][0] = CreatePlayerTextDraw(playerid, 543.000000, 114.000000, "_");
+    mostrarobjeto[playerid][0] = CreatePlayerTextDraw(playerid, 546.000000, 107.000000, "_");
     PlayerTextDrawFont(playerid, mostrarobjeto[playerid][0], 1);
-    PlayerTextDrawLetterSize(playerid, mostrarobjeto[playerid][0], 0.600000, 2.350002);
-    PlayerTextDrawTextSize(playerid, mostrarobjeto[playerid][0], 298.500000, 162.500000);
+    PlayerTextDrawLetterSize(playerid, mostrarobjeto[playerid][0], 0.600000, 1.700001);
+    PlayerTextDrawTextSize(playerid, mostrarobjeto[playerid][0], 298.500000, 184.000000);
     PlayerTextDrawSetOutline(playerid, mostrarobjeto[playerid][0], 1);
     PlayerTextDrawSetShadow(playerid, mostrarobjeto[playerid][0], 0);
     PlayerTextDrawAlignment(playerid, mostrarobjeto[playerid][0], 2);
     PlayerTextDrawColor(playerid, mostrarobjeto[playerid][0], -1);
     PlayerTextDrawBackgroundColor(playerid, mostrarobjeto[playerid][0], 255);
-    PlayerTextDrawBoxColor(playerid, mostrarobjeto[playerid][0], 135);
+    PlayerTextDrawBoxColor(playerid, mostrarobjeto[playerid][0], 85);
     PlayerTextDrawUseBox(playerid, mostrarobjeto[playerid][0], 1);
     PlayerTextDrawSetProportional(playerid, mostrarobjeto[playerid][0], 1);
     PlayerTextDrawSetSelectable(playerid, mostrarobjeto[playerid][0], 0);
 
-    mostrarobjeto[playerid][1] = CreatePlayerTextDraw(playerid, 617.000000, 116.000000, "Preciona  ~r~C ~w~para recoger el objeto");
+    mostrarobjeto[playerid][1] = CreatePlayerTextDraw(playerid, 546.000000, 107.000000, "_");
     PlayerTextDrawFont(playerid, mostrarobjeto[playerid][1], 1);
-    PlayerTextDrawLetterSize(playerid, mostrarobjeto[playerid][1], 0.254166, 1.750002);
-    PlayerTextDrawTextSize(playerid, mostrarobjeto[playerid][1], 298.500000, 75.000000);
-    PlayerTextDrawSetOutline(playerid, mostrarobjeto[playerid][1], 0);
-    PlayerTextDrawSetShadow(playerid, mostrarobjeto[playerid][1], 1);
-    PlayerTextDrawAlignment(playerid, mostrarobjeto[playerid][1], 3);
+    PlayerTextDrawLetterSize(playerid, mostrarobjeto[playerid][1], 0.600000, -0.399996);
+    PlayerTextDrawTextSize(playerid, mostrarobjeto[playerid][1], 298.500000, 184.000000);
+    PlayerTextDrawSetOutline(playerid, mostrarobjeto[playerid][1], 1);
+    PlayerTextDrawSetShadow(playerid, mostrarobjeto[playerid][1], 0);
+    PlayerTextDrawAlignment(playerid, mostrarobjeto[playerid][1], 2);
     PlayerTextDrawColor(playerid, mostrarobjeto[playerid][1], -1);
     PlayerTextDrawBackgroundColor(playerid, mostrarobjeto[playerid][1], 255);
-    PlayerTextDrawBoxColor(playerid, mostrarobjeto[playerid][1], 135);
-    PlayerTextDrawUseBox(playerid, mostrarobjeto[playerid][1], 0);
+    PlayerTextDrawBoxColor(playerid, mostrarobjeto[playerid][1], -1962934017);
+    PlayerTextDrawUseBox(playerid, mostrarobjeto[playerid][1], 1);
     PlayerTextDrawSetProportional(playerid, mostrarobjeto[playerid][1], 1);
     PlayerTextDrawSetSelectable(playerid, mostrarobjeto[playerid][1], 0);
 
-    mostrarobjeto[playerid][2] = CreatePlayerTextDraw(playerid, 463.000000, 115.000000, "_");
+    mostrarobjeto[playerid][2] = CreatePlayerTextDraw(playerid, 546.000000, 108.000000, "[~r~!~w~]Preciona ~r~C ~w~para recoger");
     PlayerTextDrawFont(playerid, mostrarobjeto[playerid][2], 1);
-    PlayerTextDrawLetterSize(playerid, mostrarobjeto[playerid][2], 0.600000, 2.250001);
-    PlayerTextDrawTextSize(playerid, mostrarobjeto[playerid][2], 298.500000, 2.500000);
-    PlayerTextDrawSetOutline(playerid, mostrarobjeto[playerid][2], 1);
-    PlayerTextDrawSetShadow(playerid, mostrarobjeto[playerid][2], 0);
+    PlayerTextDrawLetterSize(playerid, mostrarobjeto[playerid][2], 0.345833, 1.350002);
+    PlayerTextDrawTextSize(playerid, mostrarobjeto[playerid][2], 298.500000, 180.500000);
+    PlayerTextDrawSetOutline(playerid, mostrarobjeto[playerid][2], 0);
+    PlayerTextDrawSetShadow(playerid, mostrarobjeto[playerid][2], 1);
     PlayerTextDrawAlignment(playerid, mostrarobjeto[playerid][2], 2);
     PlayerTextDrawColor(playerid, mostrarobjeto[playerid][2], -1);
     PlayerTextDrawBackgroundColor(playerid, mostrarobjeto[playerid][2], 255);
-    PlayerTextDrawBoxColor(playerid, mostrarobjeto[playerid][2], -1962934137);
-    PlayerTextDrawUseBox(playerid, mostrarobjeto[playerid][2], 1);
+    PlayerTextDrawBoxColor(playerid, mostrarobjeto[playerid][2], 135);
+    PlayerTextDrawUseBox(playerid, mostrarobjeto[playerid][2], 0);
     PlayerTextDrawSetProportional(playerid, mostrarobjeto[playerid][2], 1);
     PlayerTextDrawSetSelectable(playerid, mostrarobjeto[playerid][2], 0);
+
 }
 
 
