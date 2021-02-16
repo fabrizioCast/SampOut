@@ -22,6 +22,8 @@ enum{
     d_email,
     d_edad,
     d_login,
+    raza_d,
+    tirar_dialog
 };
 new Text:ClaveTD[15];
 new PlayerText:PlayerTD[MAX_PLAYERS][2];
@@ -37,6 +39,15 @@ new PassYes[MAX_PLAYERS];
 
 //______________MYSQL_____________//
 new MySQL:Database;
+
+
+#define HOLDING(%0) \
+    ((newkeys & (%0)) == (%0))
+
+// PRESSED(keys)
+#define PRESSED(%0) \
+    (((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
+
 
 NombreJugador(playerid)
 {
@@ -57,6 +68,8 @@ stock ret_pName(playerid)
     GetPlayerName(playerid, name, sizeof(name));
     return name;
 }
+
+
 stock CongelarPlayer(playerid, time)
 {
     TogglePlayerControllable(playerid, 0);

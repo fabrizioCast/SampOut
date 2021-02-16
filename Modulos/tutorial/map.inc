@@ -9,6 +9,70 @@ new bool:v_State;
 new bool:v_Operating;
 new bool:v_sdState;
 
+stock CargarMapeoCara()
+{
+    new tmpobjid;
+    tmpobjid = CreateDynamicObjectEx(19377, 2324.819335, -649.804565, 957.279541, 180.000000, 90.000000, 180.000000, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2321.179687, -654.645935, 959.095214, 0.000000, 0.000000, 90.000000, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2324.379394, -654.645935, 959.095214, 0.000000, 0.000000, 90.000000, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2327.583496, -654.645935, 959.095214, 0.000007, 0.000000, 89.999977, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2330.783203, -654.645935, 959.095214, 0.000007, 0.000000, 89.999977, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2319.536376, -652.995239, 959.095214, 0.000007, -0.000014, 179.999862, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2319.536376, -649.795532, 959.095214, 0.000007, -0.000014, 179.999862, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2319.536376, -646.591430, 959.095214, 0.000014, -0.000014, 179.999832, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2319.536376, -643.391723, 959.095214, 0.000014, -0.000014, 179.999832, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2332.245849, -652.935180, 959.095214, 0.000007, -0.000014, 179.999862, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2332.245849, -649.735473, 959.095214, 0.000007, -0.000014, 179.999862, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2332.245849, -646.531372, 959.095214, 0.000014, -0.000014, 179.999832, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2332.245849, -643.331665, 959.095214, 0.000014, -0.000014, 179.999832, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2330.605712, -641.921264, 959.095214, 0.000000, -0.000022, -90.000099, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2327.406005, -641.921264, 959.095214, 0.000000, -0.000022, -90.000099, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2324.201904, -641.921264, 959.095214, 0.000007, -0.000022, -90.000129, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19353, 2321.002197, -641.921264, 959.095214, 0.000007, -0.000022, -90.000129, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16640, "a51", "a51_wall1", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19377, 2324.819335, -640.174926, 957.279541, 180.000000, 90.000000, 180.000000, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19377, 2335.301757, -640.174926, 957.279541, 180.000000, 90.000000, 180.000000, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19377, 2335.301757, -649.803710, 957.279541, 180.000000, 90.000000, 180.000000, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19377, 2324.819335, -649.804565, 960.909973, 0.000000, -89.999984, -0.000029, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19377, 2324.819335, -640.174926, 960.909973, 0.000000, -89.999984, -0.000029, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19377, 2335.301757, -640.174926, 960.909973, 0.000000, -89.999984, -0.000029, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    tmpobjid = CreateDynamicObjectEx(19377, 2335.301757, -649.803710, 960.909973, 0.000000, -89.999984, -0.000029, 300.00, 300.00); 
+    SetDynamicObjectMaterial(tmpobjid, 0, 16644, "a51_detailstuff", "steel256128", 0x00000000);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    tmpobjid = CreateDynamicObjectEx(1420, 2333.032226, -646.218017, 957.752258, 89.699981, 0.000000, 270.000000, 300.00, 300.00); 
+    tmpobjid = CreateDynamicObjectEx(2670, 2331.706054, -647.025329, 957.445556, 0.000000, 0.000000, 36.100002, 300.00, 300.00); 
+    tmpobjid = CreateDynamicObjectEx(2146, 2329.919433, -653.221679, 957.835937, 0.000000, 0.000000, 0.000000, 300.00, 300.00); 
+    tmpobjid = CreateDynamicObjectEx(2146, 2327.547851, -653.221679, 957.835937, 0.000000, 0.000000, 0.000000, 300.00, 300.00); 
+    tmpobjid = CreateDynamicObjectEx(2146, 2325.276855, -653.221679, 957.835937, 0.000000, 0.000000, 0.000000, 300.00, 300.00); 
+    tmpobjid = CreateDynamicObjectEx(927, 2332.174316, -649.557373, 958.225524, 0.000000, 0.000000, 90.000000, 300.00, 300.00); 
+    tmpobjid = CreateDynamicObjectEx(1420, 2331.703369, -641.136840, 960.399902, 89.699981, 0.000000, 0.000000, 300.00, 300.00); 
+    tmpobjid = CreateDynamicObjectEx(2673, 2330.883544, -649.760314, 957.445556, 0.000000, 0.000000, 96.799980, 300.00, 300.00); 
+}
+
 stock CargarMapeoTuto()
 {
     new tmpobjid;

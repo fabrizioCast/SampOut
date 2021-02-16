@@ -1,9 +1,7 @@
 #include "../Modulos/tutorial/funcionmapeo.inc"
 #include "YSI\y_hooks"
 
-enum {
-    raza_d
-};
+
 
 new Text:apariencia[13];
 new PlayerText:femenino[MAX_PLAYERS];
@@ -149,6 +147,7 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 SetPlayerVirtualWorld(playerid, 0);
                 SetPlayerPos(playerid, 2349.4131,-700.9865,117.3094);
                 TogglePlayerControllable(playerid, 1);
+                SetCameraBehindPlayer(playerid);
                 CongelarPlayer(playerid, 2000);
             } else return ShowInfoForPlayer(playerid, "~r~Completa la edad!", 3000);
         }
@@ -199,13 +198,7 @@ hook:OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 }
 stock MostrarPersonalizacion(playerid)
 {
-    new vwa = random(5670);
-    SetPlayerSkin(playerid, 7);
-    SetPlayerVirtualWorld(playerid, vwa);
-    SetPlayerPos(playerid, 2352.7625,-685.5911,117.3035);
-    SetPlayerFacingAngle(playerid,0.7523);
-    ApplyAnimation(playerid, "INIT_SHOP", "SHOP_CASHIER", 4.1, true, 1, 1, 1, 0);
-    SetPlayerCameraPos(playerid,2357.3994,-649.3740,128.4521);
+    
     SendClientMessage(playerid, -1, "[{FF8F00}TIP{FFFFFF}]: Una vez selecionado el genero no lo podras cambiar, cuidado!.");
     for(new i; i < 13; i++)
     {
@@ -220,11 +213,26 @@ stock MostrarPersonalizacion(playerid)
     PlayerTextDrawShow(playerid, finalizar[playerid]);
     SelectTextDraw(playerid, 0xFF6C00FF);
     temp_inmenu_carac[playerid] = true;
+    new vwa = random(5670);
+    SetPlayerSkin(playerid, 7);
+    SetPlayerVirtualWorld(playerid, vwa);
+    SetPlayerPos(playerid, 2331.3108,-648.2766,958.3655);
+    SetPlayerFacingAngle(playerid,91.6271);
+    SetTimerEx("CinematicaInicio2", 1, false, "d", playerid);
+}
+
+forward CinematicaInicio2(playerid);
+public CinematicaInicio2(playerid)
+{
+    SetPlayerCameraPos(playerid,2327.6436,-648.0535,958.3655);
+    SetPlayerCameraLookAt(playerid, 2331.3108,-648.2766,958.3655);
+    return 1;
 }
 
 hook:OnGameModeInit()
 {
     CargarApariencia();
+    CargarMapeoCara();
     return 1;
 }
 hook:OnPlayerConnect(playerid)

@@ -19,15 +19,6 @@
 #define IZQ 1 //Mano izquierda
 #define DER 0 // Mano derecha
 
-//__Macro__/
-
-// HOLDING(keys)
-#define HOLDING(%0) \
-    ((newkeys & (%0)) == (%0))
-
-// PRESSED(keys)
-#define PRESSED(%0) \
-    (((newkeys & (%0)) == (%0)) && ((oldkeys & (%0)) != (%0)))
 //________Objetos________//
 #define NADA            0
 #define HAMBURGUESA     1
@@ -94,6 +85,7 @@ hook:In_OnPlayerConnect(playerid)
 {
     CargarPlayerInventario(playerid);
     PlayerTextDrawSetString(playerid, names[playerid], NombreJugador(playerid));
+    PlayerTextDrawSetPreviewModel(playerid, showskin[playerid], GetPlayerSkin(playerid));
     timerobjetos[playerid] = SetTimerEx("MostrarOb", 4000, true, "d", playerid);
     return 1;
 }
@@ -188,15 +180,17 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                     if(Objetos[VE[playerid][Inv][i]][usos] == 1)
                     {
                         VE[playerid][Inv][i] = NADA;
+                        DropObjeto(playerid, VE[playerid][Selected], 1);
+                        closeInv(playerid);
+                        OpenInv(playerid);
+                        break;
                     }
                     else
                     {
-                        Objetos[VE[playerid][Inv][i]][usos]--;
+                        ShowPlayerDialog(playerid, tirar_dialog, DIALOG_STYLE_INPUT, "Tirar Objeto", "Ingresa la cantidad que deseas tirar", "Aceptar", "Salir");
+                        temp_tirar[playerid] = i;
+                        break;
                     }
-                    DropObjeto(playerid, VE[playerid][Selected]);
-                    closeInv(playerid);
-                    OpenInv(playerid);
-                    break;
                 }
             }
         }
@@ -220,7 +214,7 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     {
         if(VE[playerid][Selected] != NADA)
         {
-            TakeObject(playerid, VE[playerid][Selected]);
+            TakeObject(playerid, VE[playerid][Selected], 1);
             OpenInv(playerid);
             OpenInv(playerid);
         }
@@ -355,8 +349,32 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     }
     return 1;
 }
-
-public OnPlayerUpdate(playerid)
+hook:OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+{
+    if(dialogid == tirar_dialog)
+    {
+        if(response)
+        {
+            new temp_cantidad_tirar = strval(inputtext);
+            if(temp_cantidad_tirar > 0)
+            {
+                if(temp_cantidad_tirar <= Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos])
+                {
+                    Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos] -= temp_cantidad_tirar;
+                    if(Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos] == 0)
+                    {
+                        VE[playerid][Inv][temp_tirar[playerid]] = NADA;
+                    }
+                    DropObjeto(playerid, VE[playerid][Selected], temp_cantidad_tirar);
+                    closeInv(playerid);
+                    OpenInv(playerid);
+                } else return ShowInfoForPlayer(playerid, "~r~No tienes esa cantidad!", 4000);
+            } else return ShowInfoForPlayer(playerid, "~r~Cantidad incorrecta!", 4000);
+        }
+    }
+    return 1;
+}
+hook OnPlayerUpdate(playerid)
 {
     if(ObjetosTimer[playerid] == true)
     {
@@ -371,6 +389,7 @@ public OnPlayerUpdate(playerid)
         }
     }
 }
+
 //_______________________C O M A N D O S____________________//
 CMD:inventario(playerid)
 {
@@ -405,22 +424,29 @@ CMD:darobjeto(playerid, params[2])
 
 
 //____________________F U N C I O N E S_____________________//
-stock GiveItem(playerid, itemidd)
+stock GiveItem(playerid, itemidd, cantidad)
 {
     new bool:found = false;
     for(new i; i<MAX_INV; i++)
     {
         if(VE[playerid][Inv][i] == itemidd)
         {
-            Objetos[VE[playerid][Inv][i]][usos]++;
+            Objetos[VE[playerid][Inv][i]][usos] += cantidad;
             found = true;
             break;
         }
-        else if(VE[playerid][Inv][i] == 0)
+    }
+    if(!found)
+    {
+        for(new i; i< MAX_INV; i++)
         {
-            VE[playerid][Inv][i] = itemidd;
-            found = true;
-            break;
+            if(VE[playerid][Inv][i] == 0)
+            {
+                VE[playerid][Inv][i] = itemidd;
+                Objetos[VE[playerid][Inv][i]][usos] += cantidad;
+                found = true;
+                break;
+            }
         }
     }
     if(!found)
@@ -463,7 +489,7 @@ stock GiveItemAdmin(playerid, itemidd, cantidad)
 }
 
 
-stock DropObjeto(playerid, item, ammod = 0)
+stock DropObjeto(playerid, item, usost)
 {
     if(O_infloor > MAX_OBJETOS_WORDl-2) return ShowInfoForPlayer(playerid, "~r~[Error]: ~w~Limite de objetos en el mundo.", 3000);
     {
@@ -471,13 +497,13 @@ stock DropObjeto(playerid, item, ammod = 0)
         GetPlayerPos(playerid, Poso[0], Poso[1], Poso[2]);
         ObjetosPiso[O_infloor][itemid] = item;
         ObjetosPiso[O_infloor][modelid] = Objetos[item][model];
-        if(IsWeapon(item)) ObjetosPiso[O_infloor][balas] = ammod;
         ObjetosPiso[O_infloor][pos][0] = Poso[0];
         ObjetosPiso[O_infloor][pos][1] = Poso[1];
         ObjetosPiso[O_infloor][pos][2] = Poso[2];
+        ObjetosPiso[O_infloor][usos] = usost;
         ObjetosPiso[O_infloor][objeto] = CreateObject(ObjetosPiso[O_infloor][modelid], Poso[0], Poso[1], Poso[2]-0.95, 5.0, 0, 0, 30.0);
         new string3d[60];
-        format(string3d, sizeof(string3d), "{154265}%s", Objetos[item][name]);
+        format(string3d, sizeof(string3d), "{154265}%s (%d)", Objetos[item][name], usost);
         ObjetosPiso[O_infloor][dtext] = Create3DTextLabel(string3d, -1, Poso[0], Poso[1], Poso[2]-0.95, 8.0, 0, 0);
         Puedetirar[playerid] = true;
         if(O_infloor == MAX_OBJETOS_WORDl-2) O_infloor = 0;
@@ -494,17 +520,9 @@ stock PickObject(playerid)
         if(VE[playerid][Mano][DER] != NADA && VE[playerid][Mano][IZQ] != NADA) return ShowInfoForPlayer(playerid, "~r~[Error]: ~w~Tienes las manos ocupadas.", 3000);
         if(IsPlayerInRangeOfPoint(playerid, 1.5, ObjetosPiso[i][pos][0], ObjetosPiso[i][pos][1], ObjetosPiso[i][pos][2]))
         {
-            if(VE[playerid][Mano][DER] == NADA)
-            {
-                VE[playerid][Mano][DER] = ObjetosPiso[i][itemid];
-                SetPlayerHandObject(playerid, DER, VE[playerid][Mano][DER]);
-            } 
-            else 
-            {
-                VE[playerid][Mano][IZQ] = ObjetosPiso[i][itemid];
-                SetPlayerHandObject(playerid, IZQ, VE[playerid][Mano][IZQ]);
-            }
+            GiveItem(playerid, ObjetosPiso[i][itemid], ObjetosPiso[i][usos]);
             DestroyFloorObject(i);
+            ApplyAnimation(playerid, "BOMBER", "BOM_PLANT", 4.1, 0, 0, 0, 0, 0);
             break;
         } else continue;
     }
@@ -512,14 +530,18 @@ stock PickObject(playerid)
 }
 
 
-stock TakeObject(playerid, item)
+stock TakeObject(playerid, item, cantidad)
 {
     if(VE[playerid][Mano][DER] != NADA && VE[playerid][Mano][IZQ] != NADA) return ShowInfoForPlayer(playerid, "~r~[Error]: ~w~Tienes las manos ocupadas", 3000);
     for(new i; i<MAX_INV; i++)
     {
         if(VE[playerid][Inv][i] == item)
         {
-            VE[playerid][Inv][i] = NADA;
+            Objetos[VE[playerid][Inv][i]][usos] -= cantidad;
+            if(Objetos[VE[playerid][Inv][i]][usos] <= 0)
+            {
+                VE[playerid][Inv][i] = NADA;
+            }
             break;
         }
     }
@@ -527,20 +549,25 @@ stock TakeObject(playerid, item)
     {
         SetPlayerHandObject(playerid, DER, item);
         VE[playerid][Mano][DER] = item;
+        VE[playerid][usosder] = cantidad;
         return 1;
     } 
-    else 
+    else if(VE[playerid][Mano][IZQ] == NADA)
     {
         SetPlayerHandObject(playerid, IZQ, item);
         VE[playerid][Mano][IZQ] = item;
+        VE[playerid][usosizq] = cantidad;
+        return 1;
     }
+    closeInv(playerid);
+    OpenInv(playerid);
     return 1;
 }
 
 
 stock SaveObject(playerid, item)
 {
-    if(GiveItem(playerid, item) == 1)
+    if(GiveItem(playerid, item, 1) == 1)
     {
         if(VE[playerid][Mano][IZQ] == item)
         {
@@ -617,8 +644,7 @@ stock OpenInv(playerid)
     PlayerTextDrawShow(playerid, tirard[playerid]);
     PlayerTextDrawShow(playerid, sacard[playerid]);
     PlayerTextDrawShow(playerid, showskin[playerid]);
-    CuentaInfo[playerid][Skin] = GetPlayerSkin(playerid);
-    PlayerTextDrawSetPreviewModel(playerid, showskin[playerid], CuentaInfo[playerid][Skin]);
+    PlayerTextDrawSetPreviewModel(playerid, showskin[playerid], GetPlayerSkin(playerid));
     SelectTextDraw(playerid,  0xFFFFFFAA);
     ShowPlayerProgressBar(playerid, PlayerProgressBar[playerid][0]);
     ShowPlayerProgressBar(playerid, PlayerProgressBar[playerid][1]);
