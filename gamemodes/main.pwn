@@ -10,6 +10,7 @@
 #include <ShowObject>
 #include <streamer>
 #include <noti>
+#include <progressmessage>
 
 //------------------DEFINES-----------------//
 #undef MAX_PLAYERS
@@ -23,6 +24,7 @@
 #include "../Modulos/tutorial/characterization.inc"
 #include "../Modulos/Server/registry.inc"
 #include "../Modulos/loot/OinFloor.inc"
+#include "../Modulos/recursos/resources.inc"
 
 CMD:noti(playerid, params[])
 {
@@ -33,31 +35,31 @@ CMD:noti(playerid, params[])
     }
     return 1;
 }
+
 //------------------MYSQL-----------------//
 #define mysql_host "localhost"
 #define mysql_user "root"
 #define mysql_pass ""
 #define mysql_database "SampOut"
+
 //----------------------INICIO GAMEMODE---------------------//
 main ()
 {
-    printf("//------------------------------------//");
-    printf("//----------SampOut ROLEPLAY----------//");
-    printf("//----------------BY------------------//");
-    printf("//---------------Sleek----------------//");
+    printf("\n<         |SampOut RolePlay|         >\n");
 }
+
 //-------------------------PUBLIC´S-----------------------//
 public OnGameModeInit()
 {
     //_______________MYSQL___________________//
     SQL::Connect(mysql_host, mysql_user, mysql_pass, mysql_database);
-    //___________NOMBRE DEL SV Y ESAS PELOTUDESES______________//
     SetGameModeText(NOMBRE_SV);
     CargarClave();
     CargarEmail();
     CargarEdad();
     CargarLogin();
     SetWeather(20);
+    CargarRecursos();
     return 1;
 }
 
@@ -70,9 +72,6 @@ public OnPlayerConnect(playerid)
     CargarLogin2(playerid);
     clearChat(playerid);
     TogglePlayerControllable(playerid, 0);
-    SetSpawnInfo( playerid, 0, 0, 1478.2531,-1683.3368,104.4600, 269.15, 0, 0, 0, 0, 0, 0 );
-    SpawnPlayer(playerid);
-    SetPlayerPos(playerid, 1478.2531,-1683.3368,104.4600);
     if(strfind(GetName(playerid),"_", false) != -1 || !strcmp(GetName(playerid), "Sleek", false, 5))
     {
         if(SQL::RowExistsEx("usuarios", "Nombre", ret_pName(playerid)))
@@ -111,6 +110,7 @@ public OnPlayerConnect(playerid)
     CrearTDDeSIFP(playerid);
     CrearTDShowObject(playerid);
     CrearNoti(playerid);
+    CargarTDProgress(playerid);
     return 1;
 }
 
@@ -124,7 +124,7 @@ public OnPlayerDisconnect(playerid, reason)
     for(new i; i <2; i++)
     {
         PlayerTextDrawHide(playerid, LoginTD2[playerid][i]);
-    }
+    }   
 }
 public OnGameModeExit()
 {
@@ -179,6 +179,9 @@ public KickearR(playerid)
 forward CinematicaInicio(playerid);
 public CinematicaInicio(playerid)
 {
+    SetSpawnInfo( playerid, 0, 0, 1478.2531,-1683.3368,104.4600, 269.15, 0, 0, 0, 0, 0, 0 );
+    SpawnPlayer(playerid);
+    SetPlayerPos(playerid, 1478.2531,-1683.3368,104.4600);
     SetPlayerCameraPos(playerid, 1478.2531,-1683.3368,104.4600);
     SetPlayerCameraLookAt(playerid, 1478.2531,-1683.3368,104.4600, CAMERA_MOVE);
     InterpolateCameraLookAt(playerid, 50.0, 50.0, 10.0, -50.0, -50.0, -10.0, 15000, CAMERA_MOVE);
