@@ -11,13 +11,13 @@ new timernoti[MAX_PLAYERS];
 
 stock CrearNoti(playerid)
 {
-    mostarnotificaciones[playerid][0] = CreatePlayerTextDraw(playerid, 97.000000, 305.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
+    mostarnotificaciones[playerid][0] = CreatePlayerTextDraw(playerid, 11.000000, 307.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
     PlayerTextDrawFont(playerid, mostarnotificaciones[playerid][0], 1);
-    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][0], 0.224998, 1.600002);
-    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][0], 298.500000, 176.000000);
+    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][0], 0.233331, 1.500002);
+    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][0], 186.000000, 165.000000);
     PlayerTextDrawSetOutline(playerid, mostarnotificaciones[playerid][0], 0);
     PlayerTextDrawSetShadow(playerid, mostarnotificaciones[playerid][0], 0);
-    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][0], 2);
+    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][0], 1);
     PlayerTextDrawColor(playerid, mostarnotificaciones[playerid][0], -1);
     PlayerTextDrawBackgroundColor(playerid, mostarnotificaciones[playerid][0], 255);
     PlayerTextDrawBoxColor(playerid, mostarnotificaciones[playerid][0], 252645335);
@@ -25,13 +25,13 @@ stock CrearNoti(playerid)
     PlayerTextDrawSetProportional(playerid, mostarnotificaciones[playerid][0], 1);
     PlayerTextDrawSetSelectable(playerid, mostarnotificaciones[playerid][0], 0);
 
-    mostarnotificaciones[playerid][1] = CreatePlayerTextDraw(playerid, 97.000000, 264.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
+    mostarnotificaciones[playerid][1] = CreatePlayerTextDraw(playerid, 11.000000, 273.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
     PlayerTextDrawFont(playerid, mostarnotificaciones[playerid][1], 1);
-    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][1], 0.224998, 1.600002);
-    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][1], 298.500000, 176.000000);
+    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][1], 0.233331, 1.500002);
+    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][1], 186.000000, 165.000000);
     PlayerTextDrawSetOutline(playerid, mostarnotificaciones[playerid][1], 0);
     PlayerTextDrawSetShadow(playerid, mostarnotificaciones[playerid][1], 0);
-    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][1], 2);
+    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][1], 1);
     PlayerTextDrawColor(playerid, mostarnotificaciones[playerid][1], -1);
     PlayerTextDrawBackgroundColor(playerid, mostarnotificaciones[playerid][1], 255);
     PlayerTextDrawBoxColor(playerid, mostarnotificaciones[playerid][1], 252645335);
@@ -39,13 +39,13 @@ stock CrearNoti(playerid)
     PlayerTextDrawSetProportional(playerid, mostarnotificaciones[playerid][1], 1);
     PlayerTextDrawSetSelectable(playerid, mostarnotificaciones[playerid][1], 0);
 
-    mostarnotificaciones[playerid][2] = CreatePlayerTextDraw(playerid, 97.000000, 225.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
+    mostarnotificaciones[playerid][2] = CreatePlayerTextDraw(playerid, 11.000000, 238.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
     PlayerTextDrawFont(playerid, mostarnotificaciones[playerid][2], 1);
-    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][2], 0.224998, 1.600002);
-    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][2], 298.500000, 176.000000);
+    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][2], 0.233331, 1.500002);
+    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][2], 186.000000, 165.000000);
     PlayerTextDrawSetOutline(playerid, mostarnotificaciones[playerid][2], 0);
     PlayerTextDrawSetShadow(playerid, mostarnotificaciones[playerid][2], 0);
-    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][2], 2);
+    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][2], 1);
     PlayerTextDrawColor(playerid, mostarnotificaciones[playerid][2], -1);
     PlayerTextDrawBackgroundColor(playerid, mostarnotificaciones[playerid][2], 255);
     PlayerTextDrawBoxColor(playerid, mostarnotificaciones[playerid][2], 252645335);
@@ -53,13 +53,13 @@ stock CrearNoti(playerid)
     PlayerTextDrawSetProportional(playerid, mostarnotificaciones[playerid][2], 1);
     PlayerTextDrawSetSelectable(playerid, mostarnotificaciones[playerid][2], 0);
 
-    mostarnotificaciones[playerid][3] = CreatePlayerTextDraw(playerid, 97.000000, 186.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
+    mostarnotificaciones[playerid][3] = CreatePlayerTextDraw(playerid, 11.000000, 203.000000, "Ysi no te merecia eee sii por que es lo que vamos a hacer chaminnn jijij hola");
     PlayerTextDrawFont(playerid, mostarnotificaciones[playerid][3], 1);
-    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][3], 0.224998, 1.600002);
-    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][3], 298.500000, 176.000000);
+    PlayerTextDrawLetterSize(playerid, mostarnotificaciones[playerid][3], 0.233331, 1.500002);
+    PlayerTextDrawTextSize(playerid, mostarnotificaciones[playerid][3], 186.000000, 165.000000);
     PlayerTextDrawSetOutline(playerid, mostarnotificaciones[playerid][3], 0);
     PlayerTextDrawSetShadow(playerid, mostarnotificaciones[playerid][3], 0);
-    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][3], 2);
+    PlayerTextDrawAlignment(playerid, mostarnotificaciones[playerid][3], 1);
     PlayerTextDrawColor(playerid, mostarnotificaciones[playerid][3], -1);
     PlayerTextDrawBackgroundColor(playerid, mostarnotificaciones[playerid][3], 255);
     PlayerTextDrawBoxColor(playerid, mostarnotificaciones[playerid][3], 252645335);
