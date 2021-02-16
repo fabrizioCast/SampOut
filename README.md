@@ -3,9 +3,17 @@ Version 0.1
 
 -Sistema de registro y logeo. (terminado)
 
--Sistema de inventario. (Desarrollando)
+-Sistema de inventario. (Terminado)
 
--Objetos de loot. (Desarollando)
+-Objetos de loot. (Terminado)
 
--Moneda basica. (Proximamanete)
-.
+-Sistema de necesidades (Desarrollando)
+
+-Funciones para los objetos (Pendiente)
+
+-Creacion de objetos IC (Pendiente)
+
+-Grupos de Supervivencia (Pendiente)
+
+........
+
