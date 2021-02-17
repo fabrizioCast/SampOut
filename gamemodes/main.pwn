@@ -65,48 +65,6 @@ public OnGameModeInit()
 
 public OnPlayerConnect(playerid)
 { 
-    SetTimerEx("CinematicaInicio", 1, false, "d", playerid);
-    CargarClave2(playerid);
-    CargarEmail2(playerid);
-    CargarEdad2(playerid);
-    CargarLogin2(playerid);
-    clearChat(playerid);
-    TogglePlayerControllable(playerid, 0);
-    if(strfind(GetName(playerid),"_", false) != -1 || !strcmp(GetName(playerid), "Sleek", false, 5))
-    {
-        if(SQL::RowExistsEx("usuarios", "Nombre", ret_pName(playerid)))
-        {
-            clearChat(playerid);
-            new handle = SQL::OpenEx(SQL::READ, "usuarios", "Nombre", ret_pName(playerid));
-            SQL::ReadInt(handle, "ID", CuentaInfo[playerid][ID]);
-			SQL::ReadString(handle, "Password", CuentaInfo[playerid][Password], 65);
-            SQL::Close(handle);
-            for(new i; i <11; i++)
-            {
-                TextDrawShowForPlayer(playerid, LoginTD[i]);
-            }
-            PlayerTextDrawShow(playerid, LoginTD2[playerid][1]);
-            SelectTextDraw(playerid, 0xF9BB0AFF); 
-        }
-        else
-        {
-            for(new i = 0; i<15; i++)
-            {
-                TextDrawShowForPlayer(playerid, ClaveTD[i]);
-            }
-            for(new i = 0; i<2; i++)
-            {
-                PlayerTextDrawShow(playerid, PlayerTD[playerid][i]);
-            }
-            SelectTextDraw(playerid, 0xF9BB0AFF);
-        }
-    }
-    else
-    {
-        clearChat(playerid);
-        SendClientMessage(playerid, -1, "{FF0000}Error: {ffffff}Nombre de usuario no valido. (NOMBRE_APELLIDO)");
-        SetTimerEx("KickearR", 1000, false, "d", playerid);
-    }
     CrearTDDeSIFP(playerid);
     CrearTDShowObject(playerid);
     CrearNoti(playerid);
@@ -179,9 +137,6 @@ public KickearR(playerid)
 forward CinematicaInicio(playerid);
 public CinematicaInicio(playerid)
 {
-    SetSpawnInfo( playerid, 0, 0, 1478.2531,-1683.3368,104.4600, 269.15, 0, 0, 0, 0, 0, 0 );
-    SpawnPlayer(playerid);
-    SetPlayerPos(playerid, 1478.2531,-1683.3368,104.4600);
     SetPlayerCameraPos(playerid, 1478.2531,-1683.3368,104.4600);
     SetPlayerCameraLookAt(playerid, 1478.2531,-1683.3368,104.4600, CAMERA_MOVE);
     InterpolateCameraLookAt(playerid, 50.0, 50.0, 10.0, -50.0, -50.0, -10.0, 15000, CAMERA_MOVE);
@@ -204,6 +159,8 @@ stock SaveAccount(playerid)
             SQL::WriteFloat(handle, "PosX", CuentaInfo[playerid][PosX]);
             SQL::WriteFloat(handle, "PosY", CuentaInfo[playerid][PosY]);
             SQL::WriteFloat(handle, "PosZ", CuentaInfo[playerid][PosZ]);
+            SQL::WriteFloat(handle, "Hambre", Necesidades[playerid][N_Hambre]);
+            SQL::WriteFloat(handle, "Sed", Necesidades[playerid][N_Sed]);
             SQL::Close(handle);
         }
         if(SQL::RowExists("inventario", "ID", CuentaInfo[playerid][ID]))
@@ -253,9 +210,13 @@ stock CargarDataPlayer(playerid)
     SQL::ReadFloat(handle, "PosX", CuentaInfo[playerid][PosX]);
     SQL::ReadFloat(handle, "PosY", CuentaInfo[playerid][PosY]);
     SQL::ReadFloat(handle, "PosZ", CuentaInfo[playerid][PosZ]);
+    SQL::ReadFloat(handle, "Sed", Necesidades[playerid][N_Hambre]);
+    SQL::ReadFloat(handle, "Hambre", Necesidades[playerid][N_Hambre]);
     SQL::Close(handle);
     SetPlayerPos(playerid, CuentaInfo[playerid][PosX], CuentaInfo[playerid][PosY], CuentaInfo[playerid][PosZ]);
     SetPlayerSkin(playerid, CuentaInfo[playerid][Skin]);
+    SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][1], Necesidades[playerid][N_Hambre]);
+    SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][0], Necesidades[playerid][N_Sed]);
     new handle2 = SQL::Open(SQL::READ, "inventario", "ID", CuentaInfo[playerid][ID]);
     SQL::ReadInt(handle2, "Slot1", VE[playerid][Inv][0]);
     SQL::ReadInt(handle2, "Slot2", VE[playerid][Inv][1]);

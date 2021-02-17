@@ -4,6 +4,7 @@
 */
 #include <YSI\y_hooks>
 
+
 forward OnPlayerFinishProgress(playerid, typer);
 //______________[Variables]______________//
 new PlayerText:progressm[MAX_PLAYERS][2];
@@ -37,7 +38,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
     return 1;
 }
 
-hook:OnPlayerDisconnect(playerid, reason)
+hook OnPlayerDisconnect(playerid, reason)
 {
     inprogress[playerid] = false;
     return 1;
@@ -48,12 +49,12 @@ public OnPlayerFinishProgress(playerid, typer)
     if(typer == 0)
     {
        GiveItem(playerid, 2, 4);
-       DestroyResource(playerid,typer, resourceids[playerid]);
+       DestroyResource(typer, resourceids[playerid]);
     }
     if(typer == 1)
     {
        GiveItem(playerid, 3, 2);
-       DestroyResource(playerid,typer, resourceids[playerid]);
+       DestroyResource(typer, resourceids[playerid]);
     }
     TogglePlayerControllable(playerid, 1);
     ApplyAnimation(playerid, "BOMBER", "BOM_PLANT", 4.1, 0, 0, 0, 0, 0);

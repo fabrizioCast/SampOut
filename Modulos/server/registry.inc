@@ -5,12 +5,13 @@
 */
 
 #include <YSI\y_hooks>
+
 #include "../Modulos/Server/prox.inc"
 #include "../Modulos/inicio/Commands.inc"
 //------------------CALLBACKS-----------------//
 
 
-hook:r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
     if(dialogid == d_pass)
     {
@@ -127,6 +128,10 @@ hook:r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     CongelarPlayer(playerid, 2000);
                     CargarDataPlayer(playerid);
                     CuentaInfo[playerid][Logeado] = 1;
+                    //____[Necesiades]______//
+                    Necesidades[playerid][N_Hambre] = 40;
+                    Necesidades[playerid][N_Sed] = 20;
+                    //__________________________//
                 }
             }
         }
@@ -134,7 +139,7 @@ hook:r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     return 1;
 }
 
-hook:r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
+hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
     //---------------------------R E G I S T R O ----------------------------------------//
     if(playertextid == PlayerTD[playerid][1])
@@ -227,7 +232,7 @@ hook:r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     }
     return 1;
 }
-hook:OnPlayerDisconnect(playerid, reason)
+hook r_OnPlayerDisconnect(playerid, reason)
 {
     //----Reset Login-------//
     PassYes[playerid] = 0;
@@ -236,7 +241,55 @@ hook:OnPlayerDisconnect(playerid, reason)
     //------------------------//
     return 1;
 }
-hook:r_OnPlayerText(playerid, text[])
+hook r_OnPlayerConnect(playerid)
+{
+    CargarClave2(playerid);
+    CargarEmail2(playerid);
+    CargarEdad2(playerid);
+    CargarLogin2(playerid);
+    clearChat(playerid);
+    TogglePlayerControllable(playerid, 0);
+    SetSpawnInfo( playerid, 0, 0, 1478.2531,-1683.3368,104.4600, 269.15, 0, 0, 0, 0, 0, 0 );
+    SpawnPlayer(playerid);
+    SetPlayerPos(playerid, 1478.2531,-1683.3368,104.4600);
+    SetTimerEx("CinematicaInicio", 15, false, "d", playerid);
+    if(strfind(GetName(playerid),"_", false) != -1 || !strcmp(GetName(playerid), "Sleek", false, 5))
+    {
+        if(SQL::RowExistsEx("usuarios", "Nombre", ret_pName(playerid)))
+        {
+            clearChat(playerid);
+            new handle = SQL::OpenEx(SQL::READ, "usuarios", "Nombre", ret_pName(playerid));
+            SQL::ReadInt(handle, "ID", CuentaInfo[playerid][ID]);
+			SQL::ReadString(handle, "Password", CuentaInfo[playerid][Password], 65);
+            SQL::Close(handle);
+            for(new i; i <11; i++)
+            {
+                TextDrawShowForPlayer(playerid, LoginTD[i]);
+            }
+            PlayerTextDrawShow(playerid, LoginTD2[playerid][1]);
+            SelectTextDraw(playerid, 0xF9BB0AFF); 
+        }
+        else
+        {
+            for(new i = 0; i<15; i++)
+            {
+                TextDrawShowForPlayer(playerid, ClaveTD[i]);
+            }
+            for(new i = 0; i<2; i++)
+            {
+                PlayerTextDrawShow(playerid, PlayerTD[playerid][i]);
+            }
+            SelectTextDraw(playerid, 0xF9BB0AFF);
+        }
+    }
+    else
+    {
+        clearChat(playerid);
+        SendClientMessage(playerid, -1, "{FF0000}Error: {ffffff}Nombre de usuario no valido. (NOMBRE_APELLIDO)");
+        SetTimerEx("KickearR", 1000, false, "d", playerid);
+    }
+}
+hook r_OnPlayerText(playerid, text[])
 {
     if(CuentaInfo[playerid][Logeado] == 0)
     {

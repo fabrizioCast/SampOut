@@ -81,6 +81,8 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
         {
             if(temp_edad[playerid] > 14 && temp_edad[playerid] <= 80)
             {
+                Necesidades[playerid][N_Hambre] = 50.00;
+                Necesidades[playerid][N_Sed] = 50.00;
                 CuentaInfo[playerid][Skin] = GetPlayerSkin(playerid);
                 new handle = SQL::Open(SQL::INSERT, "usuarios");
                 SQL::ToggleAutoIncrement(handle, true);
@@ -93,6 +95,10 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 SQL::WriteFloat(handle, "PosX", 2349.4131);
                 SQL::WriteFloat(handle, "PosY", -700.9865);
                 SQL::WriteFloat(handle, "PosZ", 117.3094);
+                SQL::WriteFloat(handle, "Hambre", Necesidades[playerid][N_Hambre]);
+                SQL::WriteFloat(handle, "Sed", Necesidades[playerid][N_Sed]);
+                SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][1], Necesidades[playerid][N_Hambre]);
+                SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][0], Necesidades[playerid][N_Sed]);
                 CuentaInfo[playerid][ID] = SQL::Close(handle);
 
                 new handle2 = SQL::Open(SQL::INSERT, "inventario");
@@ -129,8 +135,7 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 SQL::WriteInt(handle2, "Usos14", Objetos[VE[playerid][Inv][13]][usos]);
                 SQL::WriteInt(handle2, "Usos15", Objetos[VE[playerid][Inv][14]][usos]);
                 SQL::Close(handle2);
-                CuentaInfo[playerid][Logeado] = 1;
-                ClearAnimations(playerid);
+                //_____________[Esconder TextDraw]_________________//
                 for(new i; i < 13; i++)
                 {
                     TextDrawHideForPlayer(playerid, apariencia[i]);
@@ -142,6 +147,7 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 PlayerTextDrawHide(playerid, mostraredad[playerid]);
                 PlayerTextDrawHide(playerid, raza[playerid]);
                 PlayerTextDrawHide(playerid, finalizar[playerid]);
+                //________________________________________________//
                 temp_inmenu_carac[playerid] = false;
                 CancelSelectTextDraw(playerid);
                 SetPlayerVirtualWorld(playerid, 0);
@@ -149,6 +155,8 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 TogglePlayerControllable(playerid, 1);
                 SetCameraBehindPlayer(playerid);
                 CongelarPlayer(playerid, 2000);
+                CuentaInfo[playerid][Logeado] = 1; // Logeado
+                ClearAnimations(playerid);
             } else return ShowInfoForPlayer(playerid, "~r~Completa la edad!", 3000);
         }
     }
@@ -229,13 +237,13 @@ public CinematicaInicio2(playerid)
     return 1;
 }
 
-hook:OnGameModeInit()
+hook Ch_OnGameModeInit()
 {
     CargarApariencia();
     CargarMapeoCara();
     return 1;
 }
-hook:OnPlayerConnect(playerid)
+hook Ch_OnPlayerConnect(playerid)
 {
     CargarBotonesApariencia(playerid);
     return 1;

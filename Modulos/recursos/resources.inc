@@ -137,7 +137,7 @@ stock CreateResourse(playerid, type)
     return 1;
 }
 
-stock DestroyResource(playerid, type, id)
+stock DestroyResource(type, id)
 {
     if(type == 0)
     {
