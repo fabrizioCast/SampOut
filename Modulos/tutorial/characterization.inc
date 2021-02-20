@@ -16,7 +16,7 @@ new bool:temp_inmenu_carac[MAX_PLAYERS];
 new temp_edad[MAX_PLAYERS] = 20;
 new countfinalizar[MAX_PLAYERS];
 
-hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
+hook Ch_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
     if(playertextid == femenino[playerid])
     {
@@ -72,7 +72,7 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     }
     if(playertextid == raza[playerid])
     {
-        ShowPlayerDialog(playerid, raza_d, DIALOG_STYLE_LIST, "Razas:", "{C58C85}@@@@@@\n{3F2E2C}@@@@@@\n{D6AAAA}@@@@@@\n{81583A}@@@@@@", "Aceptar", "Salir");
+        ShowPlayerDialog(playerid, raza_d, DIALOG_STYLE_LIST, "Tonos:", "{C58C85}@@@@@@\n{3F2E2C}@@@@@@\n{D6AAAA}@@@@@@\n{81583A}@@@@@@", "Aceptar", "Salir");
         CancelSelectTextDraw(playerid);
     }
     if(playertextid == finalizar[playerid])
@@ -135,6 +135,13 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 SQL::WriteInt(handle2, "Usos14", Objetos[VE[playerid][Inv][13]][usos]);
                 SQL::WriteInt(handle2, "Usos15", Objetos[VE[playerid][Inv][14]][usos]);
                 SQL::Close(handle2);
+
+                new handle3 = SQL::Open(SQL::INSERT, "objetosplayer");
+                SQL::WriteInt(handle3, "ID",CuentaInfo[playerid][ID]);
+                SQL::WriteString(handle3, "Nombre", ret_pName(playerid));
+                SQL::WriteInt(handle3, "GetRadio", Radio[playerid][GetRadio]);
+                SQL::WriteInt(handle3, "BateriasRadio", Radio[playerid][Baterias]);
+                SQL::Close(handle3);
                 //_____________[Esconder TextDraw]_________________//
                 for(new i; i < 13; i++)
                 {
@@ -157,18 +164,23 @@ hook:OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 CongelarPlayer(playerid, 2000);
                 CuentaInfo[playerid][Logeado] = 1; // Logeado
                 ClearAnimations(playerid);
+                new str[128];
+                clearChat(playerid);
+                TogglePlayerSpectating(playerid, 0);
+                format(str, sizeof(str), "{36FF00}• {ffffff}Bienvenido a {FFC300}SampOut {ffffff}%s", NombreJugador(playerid));
+                SendClientMessage(playerid, -1, str);
             } else return ShowInfoForPlayer(playerid, "~r~Completa la edad!", 3000);
         }
     }
     return 1;
 }
-hook:OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+hook Ch_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
     if(dialogid == raza_d)
     {
         if(!response)
         {
-            ShowInfoForPlayer(playerid, "~r~Elige un tono de piel!", 3000);
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Elige un tono de piel");
             ShowPlayerDialog(playerid, raza_d, DIALOG_STYLE_LIST, "Razas:", "{C58C85}@@@@@@\n{D6AAAA}@@@@@@\n{81583A}@@@@@@\n{3F2E2C}@@@@@@", "Aceptar", "Salir");
         }
         else
@@ -207,7 +219,7 @@ hook:OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 stock MostrarPersonalizacion(playerid)
 {
     
-    SendClientMessage(playerid, -1, "[{FF8F00}TIP{FFFFFF}]: Una vez selecionado el genero no lo podras cambiar, cuidado!.");
+    SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Una vez selecionado el genero no lo podras cambiar");
     for(new i; i < 13; i++)
     {
         TextDrawShowForPlayer(playerid, apariencia[i]);
@@ -236,25 +248,6 @@ public CinematicaInicio2(playerid)
     SetPlayerCameraLookAt(playerid, 2331.3108,-648.2766,958.3655);
     return 1;
 }
-
-hook Ch_OnGameModeInit()
-{
-    CargarApariencia();
-    CargarMapeoCara();
-    return 1;
-}
-hook Ch_OnPlayerConnect(playerid)
-{
-    CargarBotonesApariencia(playerid);
-    return 1;
-}
-
-
-
-
-
-
-
 
 
 stock CargarBotonesApariencia(playerid)

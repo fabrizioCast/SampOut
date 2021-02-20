@@ -82,3 +82,19 @@ public CongelarPlayerT(playerid)
     TogglePlayerControllable(playerid, 1);
     return 1;
 }
+
+stock GetName(playerid) 
+{
+	new namer[MAX_PLAYER_NAME];
+	GetPlayerName(playerid, namer, sizeof(namer));
+	return namer;
+}
+
+clearChat(playerid)
+{
+	for(new i; i<50; i++)
+	{
+		SendClientMessage(playerid, -1, "");
+	}
+	return 1;
+}

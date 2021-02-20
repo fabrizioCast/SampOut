@@ -12,173 +12,17 @@
 
 #include  <YSI\y_hooks>
 #include "../Modulos/inventario/InvData.inc"
-//________________________DEFINES__________________________//
+#include "../Modulos/inventario/oFunctions.inc"
 
-#define MAX_INV 15 //Lo maximo que puedes llevar en el inventario (Tiene que ir en corelacion al textdraw)
-#define MAX_OBJETOS 16 //Maximo de objetos creados
-#define IZQ 1 //Mano izquierda
-#define DER 0 // Mano derecha
-
-//________Objetos________//
-#define NADA            0
-#define HIERRO          1
-#define MADERA          2
-#define MINADEHIERRO    3
-#define RADIO           4
-#define BATERIA         5
-#define PICO            6
-#define MOTOSIERRA      7
-#define BOTELLADEAGUA   8
-#define HAMBURGESA      9
-#define GUN9MM          10
-#define DEAGLE          11
-#define MP5             12
-#define M4              13
-#define AMMOM4          14
-#define AMMO9MM         15
-#define AMMODK          16
-//________________________//
-
-#define TYPE_BASIC 1
-#define TYPE_MILITAR 2
-
-/*
-    Colores:
-    -Color objetos: 154265
-
-*/
-
-
-//________________V A R I A B L E S__________________//
-
-
-//_____________TextDraw_______________//
-new Text:inventari[14];
-new PlayerText:PlayerTDI[MAX_PLAYERS][15];
-new PlayerText:infoobjeto[MAX_PLAYERS];
-new PlayerText:names[MAX_PLAYERS];
-new PlayerText:showpreview[MAX_PLAYERS];
-new PlayerText:tirard[MAX_PLAYERS];
-new PlayerText:sacard[MAX_PLAYERS];
-new PlayerText:usard[MAX_PLAYERS];
-new PlayerText:infocantidad[MAX_PLAYERS];
-new PlayerText:infodes[MAX_PLAYERS];
-new PlayerText:showskin[MAX_PLAYERS];
-
-new bool:Puedetirar[MAX_PLAYERS];
-new bool:ObjetosTimer[MAX_PLAYERS];
-new timerobjetos[MAX_PLAYERS];
-
-new O_infloor; // Contador de objetos en el server.
 
 
 //________________________C A L L  B A C K S____________________//
-hook Inv_OnGameModeInit()
-{
-    O_infloor = 0;
-    CargarInventario();
-    return 1;
-}
 
-
-hook Inv_OnPlayerConnect(playerid)
-{
-    CargarPlayerInventario(playerid);
-    PlayerTextDrawSetString(playerid, names[playerid], NombreJugador(playerid));
-    PlayerTextDrawSetPreviewModel(playerid, showskin[playerid], GetPlayerSkin(playerid));
-    timerobjetos[playerid] = SetTimerEx("MostrarOb", 4000, true, "d", playerid);
-    return 1;
-}
 
 forward MostrarOb(playerid);
 public MostrarOb(playerid)
 {
     ObjetosTimer[playerid] = true;
-}
-
-hook Inv_OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
-{
-    if (PRESSED( KEY_CROUCH ))
-    {
-        PickObject(playerid);
-        return 0;
-    }
-    if (PRESSED( KEY_YES ))
-    {
-        OpenInv(playerid);
-        return 0;
-    }
-    if (PRESSED( KEY_WALK ))
-    {
-        if(VE[playerid][Mano][DER] == AMMOM4)
-        {
-            if(GetPlayerWeapon(playerid) == WEAPON_M4)
-            {
-                GivePlayerWeapon(playerid, 31, 50);
-                DestroyItemHand(playerid, DER);
-                ShowInfoForPlayer(playerid, "~b~Info: ~r~+30", 3000);
-            } else return ShowInfoForPlayer(playerid, "~r~[Error]: ~w~Debes tener el arma en mano.", 3000);
-        }
-        if(VE[playerid][Mano][DER] == M4)
-        {
-            GivePlayerWeapon(playerid, 31, 30);
-            DestroyItemHand(playerid, DER);
-            ShowInfoForPlayer(playerid, "~b~Info: ~g~M4 ~w~equipada", 3000);
-        }
-        if(VE[playerid][Mano][DER] == MP5)
-        {
-            GivePlayerWeapon(playerid, 29, 30);
-            DestroyItemHand(playerid, DER);
-            ShowInfoForPlayer(playerid, "~b~Info: ~g~MP5 ~w~equipada", 3000);
-        }
-        if(VE[playerid][Mano][DER] == DEAGLE)
-        {
-            GivePlayerWeapon(playerid, 24, 7);
-            DestroyItemHand(playerid, DER);
-            ShowInfoForPlayer(playerid, "~b~Info: ~g~D.Eagle ~w~equipada", 3000);
-        }
-        if(VE[playerid][Mano][DER] == AMMODK)
-        {
-            if(GetPlayerWeapon(playerid) == WEAPON_DEAGLE)
-            {
-                GivePlayerWeapon(playerid, 24, 7);
-                DestroyItemHand(playerid, DER);
-                ShowInfoForPlayer(playerid, "~b~Info: ~g~D.Eagle ~w~equipada", 3000);
-            } else return ShowInfoForPlayer(playerid, "~r~[Error]: ~w~Debes tener el arma en mano.", 3000);
-        }
-        if(VE[playerid][Mano][DER] == GUN9MM)
-        {
-            GivePlayerWeapon(playerid, 24, 15);
-            DestroyItemHand(playerid, DER);
-            ShowInfoForPlayer(playerid, "~b~Info: ~g~D.Eagle ~w~equipada", 3000);
-        }
-        if(VE[playerid][Mano][DER] == BOTELLADEAGUA)
-        {
-            if(Necesidades[playerid][N_Sed] >= 100.00)
-            {
-                ShowNotification(playerid, "Tu personaje no puede beber mas", 4000);
-                return 1;
-            }
-            Necesidades[playerid][N_Sed]+=10.0;
-            DestroyItemHand(playerid, DER);
-            ShowInfoForPlayer(playerid, "~b~Info: ~g~Botella de agua consumida", 3000);
-            SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][0], Necesidades[playerid][N_Sed]);
-        }
-        if(VE[playerid][Mano][DER] == HAMBURGESA)
-        {
-            if(Necesidades[playerid][N_Hambre] >= 100.00)
-            {
-                ShowNotification(playerid, "Tu personaje no puede comer mas", 4000);
-                return 1;
-            }
-            Necesidades[playerid][N_Hambre]+=7.0;
-            DestroyItemHand(playerid, DER);
-            ShowInfoForPlayer(playerid, "~b~Info: ~g~Hamburgesa consumida", 3000);
-            SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][1], Necesidades[playerid][N_Hambre]);
-        }
-        else ChangeHand(playerid);
-    }
-    return 1;
 }
 
 

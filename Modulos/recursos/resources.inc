@@ -45,8 +45,12 @@ hook:OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
             {
                 if(MaderaLoot[i][M_Talado] == false)
                 {
-                    ShowProgressMessage(playerid, KEY_CROUCH, "Preciona ~r~C ~w~rapidamente para talar el arbol", 0, i);
-                    ApplyAnimation(playerid, "CHAINSAW", "WEAPON_CSAW", 4.1, 1, 0, 0, 1, 0);
+                    if(VE[playerid][Mano][DER] == MOTOSIERRA)
+                    {
+                        ShowProgressMessage(playerid, KEY_CROUCH, "Preciona ~r~C ~w~rapidamente para talar el arbol", 0, i);
+                        ApplyAnimation(playerid, "CHAINSAW", "WEAPON_CSAW", 4.1, 1, 0, 0, 1, 0);
+                        break;
+                    } ShowInfoForPlayer(playerid, "~r~No tienes una motosierra en mano", 3000);
                 }
             }
         }
@@ -56,8 +60,12 @@ hook:OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
             {
                 if(HierroLoot[i][H_Minado] == false)
                 {
-                    ShowProgressMessage(playerid, KEY_CROUCH, "Preciona ~r~C ~w~rapidamente para minar el hierro", 1, i);
-                    ApplyAnimation(playerid, "BASEBALL", "BAT_4", 4.1, 1, 0, 0, 1, 0);
+                    if(VE[playerid][Mano][DER] == PICO)
+                    {
+                        ShowProgressMessage(playerid, KEY_CROUCH, "Preciona ~r~C ~w~rapidamente para minar el hierro", 1, i);
+                        ApplyAnimation(playerid, "BASEBALL", "BAT_4", 4.1, 1, 0, 0, 1, 0);
+                        break;
+                    } else ShowInfoForPlayer(playerid, "~r~No tienes un pico en mano", 3000);
                 }
             }
         }

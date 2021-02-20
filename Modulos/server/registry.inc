@@ -17,14 +17,14 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         if(!response)
         {
-            SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Debes ingresar una clave para poder registrarte.");
-            Kick(playerid);
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Ingresa una clave para poder continuar");
+            ShowPlayerDialog(playerid, d_pass, DIALOG_STYLE_PASSWORD, "Clave", "{F9BB0A}Ingresa tu clave", "Aceptar", "Salir");
         }
         else
         {
             if(strlen(inputtext) < 5 || strlen(inputtext) > 20)
             {
-                SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Su clave debe tener minimo 5 caracteres y 20 como maximo.");
+                SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Su clave debe comprender entre 5 y 20 caracteres.");
                 ShowPlayerDialog(playerid, d_pass, DIALOG_STYLE_PASSWORD, "Clave", "{F9BB0A}Ingresa tu clave", "Aceptar", "Salir");
                 return 0;
             }
@@ -40,7 +40,7 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         if(!response)
         {
-            SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Debes ingresar un correo para registrarte.");
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Ingresa un correo electronico valido para continua");
             ShowPlayerDialog(playerid, d_email, DIALOG_STYLE_INPUT, "E-mail", "{F9BB0A}Ingresa tu e-mail", "Aceptar", "Salir");
         }
         else
@@ -53,7 +53,7 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             }
             else
             {
-                SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Debes ingresar un correo valido.");
+                SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Correo invalido");
             }
         }
     }
@@ -61,17 +61,17 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         if(!response)
         {
-            SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Debes ingresar tu edad para registrarte.");
-            ShowPlayerDialog(playerid, d_edad, DIALOG_STYLE_INPUT, "Edad", "{F9BB0A}Ingresa tu edad", "Aceptar", "Salir");
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Ingresa una edad para continuar");
+            ShowPlayerDialog(playerid, d_edad, DIALOG_STYLE_INPUT, "Edad", "{F9BB0A}Ingresa tu edad (OOC)", "Aceptar", "Salir");
         }
         else
         {
             CuentaInfo[playerid][Edad] = strval(inputtext);
             if(IsNumeric(inputtext))
-            if(CuentaInfo[playerid][Edad] <= 5 || CuentaInfo[playerid][Edad] >= 60)
+            if(CuentaInfo[playerid][Edad] <= 7 || CuentaInfo[playerid][Edad] >= 60)
             {
-                SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Tu edad debe compreder desde los 5 hasta los 60.");
-                ShowPlayerDialog(playerid, d_edad, DIALOG_STYLE_INPUT, "Edad", "{F9BB0A}Ingresa tu edad", "Aceptar", "Salir");
+                SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Edad invalida");
+                ShowPlayerDialog(playerid, d_edad, DIALOG_STYLE_INPUT, "Edad", "{F9BB0A}Ingresa tu edad (OOC)", "Aceptar", "Salir");
             }
             else
             {
@@ -84,14 +84,14 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         if(!response)
         {
-            SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Debes ingresar tu clave para logearte.");
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Debes ingresar una contraseña para poder logearte");
             Kick(playerid);
         }
         else
         {
             if(strlen(inputtext) < 5 || strlen(inputtext) > 20)
             {
-                SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Clave incorrecta, intenta denuevo.");
+                SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Clave incorrecta, vuelve a intentarlo");
                 ShowPlayerDialog(playerid, d_login, DIALOG_STYLE_PASSWORD, "Clave", "{F9BB0A}Ingresa tu clave para logear.", "Aceptar", "Salir");
             }
             else
@@ -101,13 +101,13 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     MaxIntentos[playerid]++;
                     if(MaxIntentos[playerid] == 3)
                     {
-                        SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Intentaste demasiadas veces la clave.");
+                        SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Seguro que está es tu cuenta?");
                         Kick(playerid);
                         return 0;
                     }
                     else
                     {
-                        SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Clave incorrecta, intenta denuevo.");
+                        SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Clave incorrecta, vuelve a intentarlo");
                         ShowPlayerDialog(playerid, d_login, DIALOG_STYLE_PASSWORD, "Clave", "{F9BB0A}Ingresa tu clave para logear.", "Aceptar", "Salir");
                         return 0;
                     }
@@ -115,7 +115,9 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 else
                 {
                     SetCameraBehindPlayer(playerid);
-                    SendClientMessage(playerid, -1, "{F9BB0A}[SampOut]: {FFFFFF}Bienvenido de nuevo!");
+                    new str[128];
+                    format(str, sizeof(str), "{36FF00}• {ffffff}Bienvenido de nuevo a {FFC300}SampOut {ffffff}%s", NombreJugador(playerid));
+                    SendClientMessage(playerid, -1, str);
                     for(new i; i <15; i++)
                     {
                         TextDrawHideForPlayer(playerid, LoginTD[i]);
@@ -126,12 +128,9 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     }
                     CancelSelectTextDraw(playerid);
                     CongelarPlayer(playerid, 2000);
+                    TogglePlayerSpectating(playerid, 0);
                     CargarDataPlayer(playerid);
                     CuentaInfo[playerid][Logeado] = 1;
-                    //____[Necesiades]______//
-                    Necesidades[playerid][N_Hambre] = 40;
-                    Necesidades[playerid][N_Sed] = 20;
-                    //__________________________//
                 }
             }
         }
@@ -165,7 +164,7 @@ hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
         }
         else
         {
-            SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Rellena el formulario.");
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Rellana el formulario");
         }
         return 1;
     }
@@ -192,13 +191,13 @@ hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
         }
         else
         {
-            SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Rellena el formulario.");
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Rellana el formulario");
         }
     }
     if(playertextid == EdadTD2[playerid][1])
     {
         ShowPlayerDialog(playerid, d_edad, DIALOG_STYLE_INPUT, "Edad", "{F9BB0A}Ingresa tu edad", "Aceptar", "Salir");
-        SendClientMessage(playerid, -1, "[{FF8F00}TIP{FFFFFF}]: Si no quieres poner tu edad real puedes ingresar una aleatoria.");
+        SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Si no deseas ingresas tu edad, elige cualquiera");
         return 1;
     }
     if(playertextid == EdadTD2[playerid][0])
@@ -206,7 +205,6 @@ hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
         if(Pasos[playerid] == 3)
         {
             MostrarPersonalizacion(playerid);
-            SendClientMessage(playerid, -1, "{F9BB0A}[SampOut]: {FFFFFF}Bienvenido, completa la personalizacion de tu personaje para terminar con el registro.");
             SetCameraBehindPlayer(playerid);
             for(new i; i<15; i++)
             {
@@ -222,7 +220,7 @@ hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
         }
         else
         {
-            SendClientMessage(playerid, -1, "{FF0000}[Error]: {FFFFFF}Rellena el formulario.");
+            SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Rellana el formulario");
         }
     }
     //---------------------------L O G I N ----------------------------------------//
@@ -232,67 +230,19 @@ hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     }
     return 1;
 }
-hook r_OnPlayerDisconnect(playerid, reason)
-{
-    //----Reset Login-------//
-    PassYes[playerid] = 0;
-    Pasos[playerid] = 0;
-    MaxIntentos[playerid] = 0;
-    //------------------------//
-    return 1;
-}
-hook r_OnPlayerConnect(playerid)
-{
-    CargarClave2(playerid);
-    CargarEmail2(playerid);
-    CargarEdad2(playerid);
-    CargarLogin2(playerid);
-    clearChat(playerid);
-    TogglePlayerControllable(playerid, 0);
-    SetSpawnInfo( playerid, 0, 0, 1478.2531,-1683.3368,104.4600, 269.15, 0, 0, 0, 0, 0, 0 );
-    SpawnPlayer(playerid);
-    SetPlayerPos(playerid, 1478.2531,-1683.3368,104.4600);
-    SetTimerEx("CinematicaInicio", 15, false, "d", playerid);
-    if(strfind(GetName(playerid),"_", false) != -1 || !strcmp(GetName(playerid), "Sleek", false, 5))
-    {
-        if(SQL::RowExistsEx("usuarios", "Nombre", ret_pName(playerid)))
-        {
-            clearChat(playerid);
-            new handle = SQL::OpenEx(SQL::READ, "usuarios", "Nombre", ret_pName(playerid));
-            SQL::ReadInt(handle, "ID", CuentaInfo[playerid][ID]);
-			SQL::ReadString(handle, "Password", CuentaInfo[playerid][Password], 65);
-            SQL::Close(handle);
-            for(new i; i <11; i++)
-            {
-                TextDrawShowForPlayer(playerid, LoginTD[i]);
-            }
-            PlayerTextDrawShow(playerid, LoginTD2[playerid][1]);
-            SelectTextDraw(playerid, 0xF9BB0AFF); 
-        }
-        else
-        {
-            for(new i = 0; i<15; i++)
-            {
-                TextDrawShowForPlayer(playerid, ClaveTD[i]);
-            }
-            for(new i = 0; i<2; i++)
-            {
-                PlayerTextDrawShow(playerid, PlayerTD[playerid][i]);
-            }
-            SelectTextDraw(playerid, 0xF9BB0AFF);
-        }
-    }
-    else
-    {
-        clearChat(playerid);
-        SendClientMessage(playerid, -1, "{FF0000}Error: {ffffff}Nombre de usuario no valido. (NOMBRE_APELLIDO)");
-        SetTimerEx("KickearR", 1000, false, "d", playerid);
-    }
-}
+
+
 hook r_OnPlayerText(playerid, text[])
 {
     if(CuentaInfo[playerid][Logeado] == 0)
     {
+        return 0;
+    }
+    else if(text[0] == '!' && Radio[playerid][GetRadio] == 1 && Radio[playerid][Baterias] > 0)
+    {
+        new str[128];
+        format(str, sizeof(str), "{1D4C7D}[Frecuencia General] {ffffff}%s dice: %s", NombreJugador(playerid), text[1]);
+        RadioSupervivientes(str);
         return 0;
     }
     else

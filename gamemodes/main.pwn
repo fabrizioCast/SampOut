@@ -26,6 +26,10 @@
 #include "../Modulos/loot/OinFloor.inc"
 #include "../Modulos/recursos/resources.inc"
 
+
+//____________-MAPEOS____________________//
+//#include "../Modulos/Mapeos/maps.inc"
+
 CMD:noti(playerid, params[])
 {
     new mensaje[128];
@@ -45,7 +49,7 @@ CMD:noti(playerid, params[])
 //----------------------INICIO GAMEMODE---------------------//
 main ()
 {
-    printf("\n<         |SampOut RolePlay|         >\n");
+    printf("\n<-         SampOut RolePlay         ->\n");
 }
 
 //-------------------------PUBLICÂ´S-----------------------//
@@ -59,7 +63,12 @@ public OnGameModeInit()
     CargarEdad();
     CargarLogin();
     SetWeather(20);
+    DisableInteriorEnterExits();
     CargarRecursos();
+    CargarApariencia();
+    CargarMapeoCara();
+    O_infloor = 0;
+    CargarInventario();
     return 1;
 }
 
@@ -69,12 +78,23 @@ public OnPlayerConnect(playerid)
     CrearTDShowObject(playerid);
     CrearNoti(playerid);
     CargarTDProgress(playerid);
+    CargarBotonesApariencia(playerid);
+    CargarPlayerInventario(playerid);
+    PlayerTextDrawSetString(playerid, names[playerid], NombreJugador(playerid));
+    CargarClave2(playerid);
+    CargarEmail2(playerid);
+    CargarEdad2(playerid);
+    CargarLogin2(playerid);
+    clearChat(playerid);
+    SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Cargando datos...");
+    SetTimerEx("MostrarInicio", 3000, false, "d", playerid);
     return 1;
 }
 
 public OnPlayerDisconnect(playerid, reason)
 {
     SaveAccount(playerid);
+    KillTimer(Radio[playerid][RadioTimer]);
     for(new i; i <15; i++)
     {
         TextDrawHideForPlayer(playerid, LoginTD[i]);
@@ -134,14 +154,7 @@ public KickearR(playerid)
     Kick(playerid);
     return 1;
 }
-forward CinematicaInicio(playerid);
-public CinematicaInicio(playerid)
-{
-    SetPlayerCameraPos(playerid, 1478.2531,-1683.3368,104.4600);
-    SetPlayerCameraLookAt(playerid, 1478.2531,-1683.3368,104.4600, CAMERA_MOVE);
-    InterpolateCameraLookAt(playerid, 50.0, 50.0, 10.0, -50.0, -50.0, -10.0, 15000, CAMERA_MOVE);
-    return 1;
-}
+
 
 stock SaveAccount(playerid)
 {
@@ -198,7 +211,19 @@ stock SaveAccount(playerid)
             SQL::WriteInt(handle, "Usos15", Objetos[VE[playerid][Inv][14]][usos]);
             SQL::Close(handle);
         }
+        if(SQL::RowExists("objetosplayer", "ID", CuentaInfo[playerid][ID]))
+        {
+            new handle3 = SQL::Open(SQL::UPDATE, "objetosplayer", "ID", CuentaInfo[playerid][ID]);
+            SQL::WriteInt(handle3, "ID",CuentaInfo[playerid][ID]);
+            SQL::WriteString(handle3, "Nombre", ret_pName(playerid));
+            SQL::WriteInt(handle3, "GetRadio", Radio[playerid][GetRadio]);
+            SQL::WriteInt(handle3, "BateriasRadio", Radio[playerid][Baterias]);
+            SQL::Close(handle3);
+        }
         CuentaInfo[playerid][Logeado] = 0;
+        PassYes[playerid] = 0;
+        Pasos[playerid] = 0;
+        MaxIntentos[playerid] = 0;
     }
     return 1;
 }
@@ -249,20 +274,58 @@ stock CargarDataPlayer(playerid)
     SQL::ReadInt(handle2, "Usos14", Objetos[VE[playerid][Inv][13]][usos]);
     SQL::ReadInt(handle2, "Usos15", Objetos[VE[playerid][Inv][14]][usos]);
     SQL::Close(handle2);
+    new handle3 = SQL::Open(SQL::READ, "objetosplayer", "ID", CuentaInfo[playerid][ID]);
+    SQL::ReadInt(handle3, "GetRadio", Radio[playerid][GetRadio]);
+    SQL::ReadInt(handle3, "BateriasRadio", Radio[playerid][Baterias]);
+    SQL::Close(handle3);
+    //____{extras}____//
+    timerobjetos[playerid] = SetTimerEx("MostrarOb", 4000, true, "d", playerid);
+    Radio[playerid][RadioTimer] = SetTimerEx("BateriasRadio", 1200000, false, "d", playerid);
     return 1;
 }
-stock GetName(playerid) 
-{
-	new namer[MAX_PLAYER_NAME];
-	GetPlayerName(playerid, namer, sizeof(namer));
-	return namer;
-}
 
-clearChat(playerid)
+forward MostrarInicio(playerid);
+public MostrarInicio(playerid)
 {
-	for(new i; i<50; i++)
-	{
-		SendClientMessage(playerid, -1, "");
-	}
-	return 1;
+    TogglePlayerSpectating(playerid, true);
+    InterpolateCameraPos(playerid, 355.597930, -1715.070434, 105.277404, 483.929016, -1476.202514, 97.490631, 30000);
+    InterpolateCameraLookAt(playerid, 355.481750, -1710.357788, 103.610702, 479.389251, -1477.755615, 96.084091, 30000);
+    SetSpawnInfo(playerid, 0, 0, 2349.4131,-700.9865,117.3094, 0, 0, 0,0, 0, 0, 0);
+    if(strfind(GetName(playerid),"_", false) != -1 || !strcmp(GetName(playerid), "Sleek", false, 5))
+    {
+        clearChat(playerid);
+        if(SQL::RowExistsEx("usuarios", "Nombre", ret_pName(playerid)))
+        {
+            clearChat(playerid);
+            new handle = SQL::OpenEx(SQL::READ, "usuarios", "Nombre", ret_pName(playerid));
+            SQL::ReadInt(handle, "ID", CuentaInfo[playerid][ID]);
+			SQL::ReadString(handle, "Password", CuentaInfo[playerid][Password], 65);
+            SQL::Close(handle);
+            for(new i; i <11; i++)
+            {
+                TextDrawShowForPlayer(playerid, LoginTD[i]);
+            }
+            PlayerTextDrawShow(playerid, LoginTD2[playerid][1]);
+            SelectTextDraw(playerid, 0xF9BB0AFF); 
+        }
+        else
+        {
+            for(new i = 0; i<15; i++)
+            {
+                TextDrawShowForPlayer(playerid, ClaveTD[i]);
+            }
+            for(new i = 0; i<2; i++)
+            {
+                PlayerTextDrawShow(playerid, PlayerTD[playerid][i]);
+            }
+            SelectTextDraw(playerid, 0xF9BB0AFF);
+        }
+    }
+    else
+    {
+        clearChat(playerid);
+        SendClientMessage(playerid, -1, "{FF0000}Error: {ffffff}Nombre de usuario no valido. (NOMBRE_APELLIDO)");
+        SetTimerEx("KickearR", 1000, false, "d", playerid);
+    }
+    return 1;
 }
