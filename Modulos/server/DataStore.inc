@@ -12,6 +12,8 @@ enum JugadorInfo{
     Float:PosY,
     Float:PosZ,
     Skin,
+    Float:Vida,
+    Coin
 };
 new CuentaInfo[MAX_PLAYERS][JugadorInfo];
 
@@ -23,7 +25,11 @@ enum{
     d_edad,
     d_login,
     raza_d,
-    tirar_dialog
+    tirar_dialog,
+    d_panel,
+    d_clan_colores,
+    d_clan_territorio,
+    d_clan_info
 };
 new Text:ClaveTD[15];
 new PlayerText:PlayerTD[MAX_PLAYERS][2];
@@ -69,13 +75,15 @@ stock ret_pName(playerid)
     return name;
 }
 
-
+new temp_timer[MAX_PLAYERS];
 stock CongelarPlayer(playerid, time)
 {
+    KillTimer(temp_timer[playerid]);
     TogglePlayerControllable(playerid, 0);
-    SetTimerEx("CongelarPlayerT", time, false, "d", playerid);
+    temp_timer[playerid] = SetTimerEx("CongelarPlayerT", time, false, "d", playerid);
     return 1;
 }
+
 forward CongelarPlayerT(playerid);
 public CongelarPlayerT(playerid)
 {
@@ -98,3 +106,5 @@ clearChat(playerid)
 	}
 	return 1;
 }
+
+#include "../Modulos/server/doors.inc"

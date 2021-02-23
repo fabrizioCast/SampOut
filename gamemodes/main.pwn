@@ -12,6 +12,7 @@
 #include <noti>
 #include <progressmessage>
 
+
 //------------------DEFINES-----------------//
 #undef MAX_PLAYERS
 #define MAX_PLAYERS 100
@@ -19,6 +20,7 @@
 
 //------------------M O D U L O S-----------------//
 #include "../Modulos/server/DataStore.inc"
+#include "../Modulos/grupos/groups.inc"
 #include "../Modulos/necesidades/needs.inc"
 #include "../Modulos/inventario/inventory.inc"
 #include "../Modulos/tutorial/characterization.inc"
@@ -28,17 +30,10 @@
 
 
 //____________-MAPEOS____________________//
-//#include "../Modulos/Mapeos/maps.inc"
+#include "../Modulos/Mapeos/maps.inc"
 
-CMD:noti(playerid, params[])
-{
-    new mensaje[128];
-    if(sscanf(params, "s[128]", mensaje)) return 1;
-    {
-        ShowNotification(playerid, mensaje, 4000);
-    }
-    return 1;
-}
+//____________TextDraws____________________//
+#include "../Modulos/server/hud.inc"
 
 //------------------MYSQL-----------------//
 #define mysql_host "localhost"
@@ -52,23 +47,34 @@ main ()
     printf("\n<-         SampOut RolePlay         ->\n");
 }
 
-//-------------------------PUBLICÂ´S-----------------------//
+//-------------------------PUBLIC´S-----------------------//
 public OnGameModeInit()
 {
     //_______________MYSQL___________________//
     SQL::Connect(mysql_host, mysql_user, mysql_pass, mysql_database);
-    SetGameModeText(NOMBRE_SV);
+    //______Mapeos_______//
+    CargarHospital();
+    CargarMapeoCara();
+    //____TextDraw______//
     CargarClave();
     CargarEmail();
     CargarEdad();
     CargarLogin();
+    CargarInventario();
+    CargarRadar();
+    CargarLogo();
+    //______Mysql_______//
+    CargarRecursos();
+    CargarGrupos();
+    //______Otros______//
+    SetGameModeText(NOMBRE_SV);
+    LabelsDoors();
     SetWeather(20);
     DisableInteriorEnterExits();
-    CargarRecursos();
     CargarApariencia();
-    CargarMapeoCara();
     O_infloor = 0;
-    CargarInventario();
+    //_____Objetos_______//
+    RespawnObjetos();
     return 1;
 }
 
@@ -85,9 +91,13 @@ public OnPlayerConnect(playerid)
     CargarEmail2(playerid);
     CargarEdad2(playerid);
     CargarLogin2(playerid);
+    MostrarLogo(playerid);
+    MostrarRadar(playerid);
     clearChat(playerid);
     SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Cargando datos...");
     SetTimerEx("MostrarInicio", 3000, false, "d", playerid);
+    SetSpawnInfo(playerid, 0, 0, 2349.4131,-700.9865,117.3094, 0, 0, 0,0, 0, 0, 0);
+    SpawnPlayer(playerid);
     return 1;
 }
 
@@ -104,6 +114,7 @@ public OnPlayerDisconnect(playerid, reason)
         PlayerTextDrawHide(playerid, LoginTD2[playerid][i]);
     }   
 }
+
 public OnGameModeExit()
 {
     foreach(new i : Player)
@@ -113,6 +124,7 @@ public OnGameModeExit()
     mysql_close(Database);
     return 0;
 }
+
 public OnPlayerClickTextDraw(playerid, Text:clickedid)
 {
     if(clickedid == Text:INVALID_TEXT_DRAW)
@@ -135,7 +147,6 @@ public OnPlayerClickTextDraw(playerid, Text:clickedid)
     return 0;
 }
 
-
 public OnPlayerCommandPerformed(playerid, cmd[], params[], result, flags)
 {
     if(result == -1)
@@ -146,6 +157,32 @@ public OnPlayerCommandPerformed(playerid, cmd[], params[], result, flags)
     return 1;
 }
 
+public OnPlayerText(playerid, text[])
+{
+    if(CuentaInfo[playerid][Logeado] == 0)
+    {
+        return 0;
+    }
+    else if(text[0] == '!' && Radio[playerid][GetRadio] == 1 && Radio[playerid][Baterias] > 0)
+    {
+        new str[128];
+        format(str, sizeof(str), "{1D4C7D}[Frecuencia General] {ffffff}%s dice: %s", NombreJugador(playerid), text[1]);
+        RadioSupervivientes(str);
+        return 0;
+    }
+    else if(text[0] == '#' && ClanPlayer[playerid][Cp_Grupo] == 1)
+    {
+        RadioClanes(playerid, text[1]);
+        return 0;
+    }
+    else
+    {
+        new string[128];
+        format(string, sizeof(string), "%s dice: %s",NombreJugador(playerid), text);
+        ProxDetector(5.0, playerid, string,-1,-1,-1,-1,-1); 
+        return 0;
+    }
+}
 
 //-----------------------FUNCIONES MYSQL-----------------------//
 forward KickearR(playerid);
@@ -154,7 +191,6 @@ public KickearR(playerid)
     Kick(playerid);
     return 1;
 }
-
 
 stock SaveAccount(playerid)
 {
@@ -174,6 +210,11 @@ stock SaveAccount(playerid)
             SQL::WriteFloat(handle, "PosZ", CuentaInfo[playerid][PosZ]);
             SQL::WriteFloat(handle, "Hambre", Necesidades[playerid][N_Hambre]);
             SQL::WriteFloat(handle, "Sed", Necesidades[playerid][N_Sed]);
+            SQL::WriteFloat(handle, "Vida", CuentaInfo[playerid][Vida]);
+            SQL::WriteInt(handle, "Coin", CuentaInfo[playerid][Coin]);
+            SQL::WriteInt(handle, "GrupoID", ClanPlayer[playerid][Cp_ID]);
+            SQL::WriteInt(handle, "Grupo", ClanPlayer[playerid][Cp_Grupo]);
+            SQL::WriteInt(handle, "GrupoLider", ClanPlayer[playerid][Cp_Lider]);
             SQL::Close(handle);
         }
         if(SQL::RowExists("inventario", "ID", CuentaInfo[playerid][ID]))
@@ -237,6 +278,11 @@ stock CargarDataPlayer(playerid)
     SQL::ReadFloat(handle, "PosZ", CuentaInfo[playerid][PosZ]);
     SQL::ReadFloat(handle, "Sed", Necesidades[playerid][N_Hambre]);
     SQL::ReadFloat(handle, "Hambre", Necesidades[playerid][N_Hambre]);
+    SQL::ReadFloat(handle, "Vida", CuentaInfo[playerid][Vida]);
+    SQL::ReadInt(handle, "Coin", CuentaInfo[playerid][Coin]);
+    SQL::ReadInt(handle, "GrupoID", ClanPlayer[playerid][Cp_ID]);
+    SQL::ReadInt(handle, "Grupo", ClanPlayer[playerid][Cp_Grupo]);
+    SQL::ReadInt(handle, "GrupoLider", ClanPlayer[playerid][Cp_Lider]);
     SQL::Close(handle);
     SetPlayerPos(playerid, CuentaInfo[playerid][PosX], CuentaInfo[playerid][PosY], CuentaInfo[playerid][PosZ]);
     SetPlayerSkin(playerid, CuentaInfo[playerid][Skin]);
@@ -287,7 +333,6 @@ stock CargarDataPlayer(playerid)
 forward MostrarInicio(playerid);
 public MostrarInicio(playerid)
 {
-    TogglePlayerSpectating(playerid, true);
     InterpolateCameraPos(playerid, 355.597930, -1715.070434, 105.277404, 483.929016, -1476.202514, 97.490631, 30000);
     InterpolateCameraLookAt(playerid, 355.481750, -1710.357788, 103.610702, 479.389251, -1477.755615, 96.084091, 30000);
     SetSpawnInfo(playerid, 0, 0, 2349.4131,-700.9865,117.3094, 0, 0, 0,0, 0, 0, 0);

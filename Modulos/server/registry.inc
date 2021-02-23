@@ -128,7 +128,6 @@ hook r_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     }
                     CancelSelectTextDraw(playerid);
                     CongelarPlayer(playerid, 2000);
-                    TogglePlayerSpectating(playerid, 0);
                     CargarDataPlayer(playerid);
                     CuentaInfo[playerid][Logeado] = 1;
                 }
@@ -205,7 +204,6 @@ hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
         if(Pasos[playerid] == 3)
         {
             MostrarPersonalizacion(playerid);
-            SetCameraBehindPlayer(playerid);
             for(new i; i<15; i++)
             {
                 TextDrawHideForPlayer(playerid, EdadTD[i]);
@@ -231,28 +229,6 @@ hook r_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
     return 1;
 }
 
-
-hook r_OnPlayerText(playerid, text[])
-{
-    if(CuentaInfo[playerid][Logeado] == 0)
-    {
-        return 0;
-    }
-    else if(text[0] == '!' && Radio[playerid][GetRadio] == 1 && Radio[playerid][Baterias] > 0)
-    {
-        new str[128];
-        format(str, sizeof(str), "{1D4C7D}[Frecuencia General] {ffffff}%s dice: %s", NombreJugador(playerid), text[1]);
-        RadioSupervivientes(str);
-        return 0;
-    }
-    else
-    {
-        new string[128];
-        format(string, sizeof(string), "%s dice: %s",NombreJugador(playerid), text);
-        ProxDetector(5.0, playerid, string,-1,-1,-1,-1,-1); 
-        return 0;
-    }
-}
 
 //-----------------------------STOCKS-----------------------------//
 stock IsValidMail(mail[])

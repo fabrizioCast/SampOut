@@ -8,7 +8,7 @@ stock ProxDetector(Float:radi, playerid, string[],col1,col2,col3,col4,col5)
 		new Float:oldposx, Float:oldposy, Float:oldposz;
 		new Float:tempposx, Float:tempposy, Float:tempposz;
 		GetPlayerPos(playerid, oldposx, oldposy, oldposz);
-		for(new i = 0; i < MAX_PLAYERS; i++)
+		for (new i = 0, j = GetPlayerPoolSize(); i <= j; i++)
 		{
 			
 			if(IsPlayerConnected(i) && (GetPlayerVirtualWorld(playerid) == GetPlayerVirtualWorld(i)))
