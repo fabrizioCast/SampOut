@@ -92,7 +92,8 @@ public OnPlayerConnect(playerid)
     CargarEdad2(playerid);
     CargarLogin2(playerid);
     MostrarLogo(playerid);
-    MostrarRadar(playerid);
+    //MostrarRadar(playerid);
+    MostrarTerritorios(playerid);
     clearChat(playerid);
     SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Cargando datos...");
     SetTimerEx("MostrarInicio", 3000, false, "d", playerid);
