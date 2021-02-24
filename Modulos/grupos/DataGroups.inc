@@ -6,7 +6,13 @@ enum Clan{
     C_Color,
     C_Owner[MAX_PLAYER_NAME],
     C_Miembros,
-    C_Territorio
+    C_Territorio,
+	C_GangZone,
+	C_AreaID,
+	Float:C_minX,
+	Float:C_minY,
+	Float:C_maxX,
+	Float:C_maxY
 };
 new Clanes[MAX_CLANES][Clan];
 
@@ -57,3 +63,11 @@ new RandomColors[] =
 	0xDCDE3DFF,	0x10C9C5FF,	0x70524DFF,	0x0BE472FF,	0x8A2CD7FF,	0x6152C2FF,	0xCF72A9FF,	0xE59338FF,	0xEEDC2DFF,
 	0xD8C762FF,	0xD8C762FF
 };
+
+GetBoundsOfGangZone(Float:cx, Float:cy, Float:width, Float:height, &Float:x1, &Float:y1, &Float:x2, &Float:y2)
+{
+x1 = cx - (width / 2.0);
+x2 = cx + (width / 2.0);
+y1 = cy - (height / 2.0);
+y2 = cy + (height / 2.0);
+}

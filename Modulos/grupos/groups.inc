@@ -2,6 +2,7 @@
 
 
 #include "../Modulos/grupos/DataGroups.inc"
+#include "../Modulos/grupos/territories.inc"
 
 
 
@@ -23,31 +24,37 @@ stock CrearClan(playerid, nombre[20], color)
     {
         if(Clanes[i][C_ID] == 0)
         {
-            Clanes[i][C_Nombre] = nombre;
-            Clanes[i][C_Color] = color;
-            Clanes[i][C_Owner] = ret_pName(playerid);
-            Clanes[i][C_Miembros] = 1;
-            Clanes[i][C_Territorio] = 0;
             ClanPlayer[playerid][Cp_Grupo] = 1;
             ClanPlayer[playerid][Cp_Lider] = 1;
             ClanPlayer[playerid][Cp_Color] = color;
             countclanes++;
             new handle2 = SQL::Open(SQL::INSERT, "grupos");
             SQL::ToggleAutoIncrement(handle2, true);
-            SQL::WriteString(handle2, "Nombre", Clanes[i][C_Nombre]);
-            SQL::WriteInt(handle2, "Color", Clanes[i][C_Color]);
-            SQL::WriteString(handle2, "Owner", Clanes[i][C_Owner]);
-            SQL::WriteInt(handle2, "Miembros", Clanes[i][C_Miembros]);
-            SQL::WriteInt(handle2, "Territorio", Clanes[i][C_Territorio]);
-            Clanes[i][C_ID] = SQL::Close(handle2);
-            ClanPlayer[playerid][Cp_ID] = Clanes[i][C_ID];
+            SQL::WriteString(handle2, "Nombre", nombre);
+            SQL::WriteInt(handle2, "Color", color);
+            SQL::WriteString(handle2, "Owner", ret_pName(playerid));
+            SQL::WriteInt(handle2, "Miembros", 1);
+            SQL::WriteInt(handle2, "Territorio", 0);
+            SQL::WriteInt(handle2, "GangZone", 0);
+            SQL::WriteFloat(handle2, "minX", 0.0);
+            SQL::WriteFloat(handle2, "minY", 0.0);
+            SQL::WriteFloat(handle2, "maxX", 0.0);
+            SQL::WriteFloat(handle2, "maxY", 0.0);
+            new pia = SQL::Close(handle2);
+            Clanes[pia][C_ID] = pia;
+            Clanes[pia][C_Nombre] = nombre;
+            Clanes[pia][C_Color] = color;
+            Clanes[pia][C_Owner] = ret_pName(playerid);
+            Clanes[pia][C_Miembros] = 1;
+            Clanes[pia][C_Territorio] = 0;
+            ClanPlayer[playerid][Cp_ID] = Clanes[pia][C_ID];
             new handle = SQL::Open(SQL::UPDATE, "usuarios", "ID", CuentaInfo[playerid][ID]);
             SQL::WriteInt(handle, "GrupoID", ClanPlayer[playerid][Cp_ID]);
             SQL::WriteInt(handle, "Grupo", ClanPlayer[playerid][Cp_Grupo]);
             SQL::WriteInt(handle, "GrupoLider", ClanPlayer[playerid][Cp_Lider]);
             SQL::Close(handle);
             new str[128];
-            format(str, 128, "{36FF00}• {ffffff}Felicidades, creaste el grupo {%06x}%s", Clanes[i][C_Color] >>> 8, Clanes[i][C_Nombre]);
+            format(str, 128, "{36FF00}• {ffffff}Felicidades, creaste el grupo {%06x}%s", Clanes[pia][C_Color] >>> 8, Clanes[pia][C_Nombre]);
             SendClientMessage(playerid, -1, str);
             break;
         }
@@ -73,7 +80,14 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                     }
                     ShowPlayerDialog(playerid, d_clan_colores, DIALOG_STYLE_LIST, "Seleciona un color", colores_temp, "Aceptar", "Salir");
                 }
-                case 1: SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Proximamente...");
+                case 1: 
+                {
+                    if(Clanes[ClanPlayer[playerid][Cp_ID]][C_Territorio] == 0)
+                    {
+                        CrearTerritorio(playerid);
+                    }
+                    //SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Proximamente...");
+                }
                 case 2:
                 {
                     new str[350];
@@ -109,9 +123,10 @@ CMD:saveclan(playerid)
     GuardarGrupos();
     return 1;
 }
+
 stock RadioClanes(playerid, string[])
 {
-    for(new p; p <= countclanes; p++)
+    for(new p; p < MAX_CLANES; p++)
     {
         if(ClanPlayer[playerid][Cp_ID] == Clanes[p][C_ID])
         {
@@ -142,14 +157,20 @@ stock CargarGrupos()
         SQL::ReadString(hand, "Owner", Clanes[pia][C_Owner], MAX_PLAYER_NAME, i);
         SQL::ReadInt(hand, "Miembros", Clanes[pia][C_Miembros], i);
         SQL::ReadInt(hand, "Territorio", Clanes[pia][C_Territorio], i);
+        SQL::ReadInt(hand, "GangZone", Clanes[pia][C_GangZone], i);
+        SQL::ReadInt(hand, "AreaID", Clanes[pia][C_AreaID], i);
+        SQL::ReadFloat(hand, "minX", Clanes[pia][C_minX], i);
+        SQL::ReadFloat(hand, "minY", Clanes[pia][C_minY], i);
+        SQL::ReadFloat(hand, "maxX", Clanes[pia][C_maxX], i);
+        SQL::ReadFloat(hand, "maxY", Clanes[pia][C_maxY], i);
         countclanes = SQL::Close(hand);
+        Clanes[pia][C_AreaID] = CreateDynamicCube(Clanes[pia][C_minX], Clanes[pia][C_minY], -100.00, Clanes[pia][C_maxX], Clanes[pia][C_maxY], 1000.00);
     }
     printf("[Clanes Cargados]: %d", countclanes);
 }
-
 stock GuardarGrupos()
 {
-    for(new i = 1; i <= countclanes; i++)
+    for(new i = 1; i < MAX_CLANES; i++)
     {
         if(Clanes[i][C_ID] > 0)
         {
@@ -159,6 +180,12 @@ stock GuardarGrupos()
             SQL::WriteInt(handle2, "Color", Clanes[i][C_Color]);
             SQL::WriteInt(handle2, "Miembros", Clanes[i][C_Miembros]);
             SQL::WriteInt(handle2, "Territorio", Clanes[i][C_Territorio]);
+            SQL::WriteInt(handle2, "GangZone", Clanes[i][C_GangZone]);
+            SQL::WriteInt(handle2, "AreaID", Clanes[i][C_AreaID]);
+            SQL::WriteFloat(handle2, "minX", Clanes[i][C_minX]);
+            SQL::WriteFloat(handle2, "minY", Clanes[i][C_minY]);
+            SQL::WriteFloat(handle2, "maxX", Clanes[i][C_maxX]);
+            SQL::WriteFloat(handle2, "maxY", Clanes[i][C_maxY]);
             SQL::Close(handle2);
         }
     }
