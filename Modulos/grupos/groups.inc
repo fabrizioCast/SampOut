@@ -1,3 +1,9 @@
+/*
+    Sistema de clanes
+    By: Sleek
+
+*/
+
 #include <YSI\y_hooks>
 
 
@@ -17,6 +23,103 @@ CMD:crearclan(playerid, params[1])
     return 1;
 }
 
+//_________Panel____________//
+CMD:clan(playerid)
+{
+    if(ClanPlayer[playerid][Cp_Grupo] == 1)
+    {
+        new temp_nombre_clan[256];
+        format(temp_nombre_clan, 256, "{%06x}%s", Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Nombre]);
+        ShowPlayerDialog(playerid, d_panel, DIALOG_STYLE_LIST, temp_nombre_clan, "Agregar Miembro\nExpulsar Miembro\nColor del Clan\nTerritorio\nInformacion", "Aceptar", "Salir");
+    }
+    return 1;
+}
+
+CMD:saveclan(playerid)
+{
+    GuardarGrupos();
+    return 1;
+}
+
+
+hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+{
+    if(dialogid == d_panel)
+    {
+        if(response)
+        {
+            switch(listitem)
+            {
+                case 0: ShowPlayerDialog(playerid, d_clan_reclutar, DIALOG_STYLE_INPUT, "Reclutar Miembro", "{FFC900}• {ffffff}Escribe la {FF5733}ID {ffffff}del jugador a reclutar", "Reclutar", "Cancelar");
+                case 1: ShowPlayerDialog(playerid, d_clan_expulsar, DIALOG_STYLE_INPUT, "Reclutar Miembro", "{FFC900}• {ffffff}Escribe la {FF5733}ID {ffffff}del jugador a expulsar", "Expulsar", "Cancelar");
+                case 2:
+                {
+                    new colores_temp[3620];
+                    for(new i; i < sizeof(RandomColors); i++)
+                    {
+                        new temp_temp[256];
+                        format(temp_temp, 256, "{%06x}Color %d\n", RandomColors[i] >>> 8, i);
+                        strcat(colores_temp, temp_temp);
+                    }
+                    ShowPlayerDialog(playerid, d_clan_colores, DIALOG_STYLE_LIST, "Seleciona un color", colores_temp, "Aceptar", "Salir");
+                }
+                case 3: 
+                {
+                    if(Clanes[ClanPlayer[playerid][Cp_ID]][C_Territorio] == 0)
+                    {
+                        if(PuedeReclamarTerritorio(playerid) > 0)
+                        {
+                            CrearTerritorio(playerid);
+                        } else ShowInfoForPlayer(playerid, "~r~Busca otro lugar", 3000);
+                    }
+                }
+                case 4:
+                {
+                    new str[350];
+                    format(str, sizeof(str), "{ffffff}Clan ID: {%06x}%d\n{ffffff}Clan Lider: {%06x}%s\n{ffffff}Clan Miembros: {%06x}%d", Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_ID], 
+                    Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Owner], Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Miembros]);
+                    ShowPlayerDialog(playerid, d_clan_info, DIALOG_STYLE_MSGBOX, "Informacion", str, "Aceptar", "Salir");
+                }
+            }
+        }
+    }
+    if(dialogid == d_clan_colores)
+    {
+        if(response)
+        {
+            Clanes[ ClanPlayer[playerid][Cp_ID] ][C_Color] = RandomColors[listitem];
+            new str[128];
+            format(str, 128, "{36FF00}• {ffffff}Actualizaste el {%06x}color {ffffff}de %s", Clanes[ ClanPlayer[playerid][Cp_ID] ][C_Color] >>> 8, Clanes[ ClanPlayer[playerid][Cp_ID] ][C_Nombre]);
+            SendClientMessage(playerid, -1, str);
+            if(Clanes[ ClanPlayer[playerid][Cp_ID] ][C_Territorio] == 1)
+            {
+                ActualizarColorTerritorio(playerid);
+            }
+        }
+    }
+    if(dialogid == d_clan_reclutar)
+    {
+        if(response)
+        {
+            if(IsNumeric(inputtext))
+            {
+                new id_temp = strval(inputtext);
+                UnirMiembroClan(playerid, id_temp);
+            } else  ShowInfoForPlayer(playerid, "~r~Solo puedes ingresar la ID del jugador", 3000);
+        }
+    }
+    if(dialogid == d_clan_expulsar)
+    {
+        if(response)
+        {
+            if(IsNumeric(inputtext))
+            {
+                new id_temp = strval(inputtext);
+                ExpulsarMiembroClan(playerid, id_temp);
+            } else ShowInfoForPlayer(playerid, "~r~Solo puedes ingresar la ID del jugador", 3000);
+        }
+    }
+}
 
 stock CrearClan(playerid, nombre[20], color)
 {
@@ -26,7 +129,6 @@ stock CrearClan(playerid, nombre[20], color)
         {
             ClanPlayer[playerid][Cp_Grupo] = 1;
             ClanPlayer[playerid][Cp_Lider] = 1;
-            ClanPlayer[playerid][Cp_Color] = color;
             countclanes++;
             new handle2 = SQL::Open(SQL::INSERT, "grupos");
             SQL::ToggleAutoIncrement(handle2, true);
@@ -61,67 +163,53 @@ stock CrearClan(playerid, nombre[20], color)
     }
 }
 
-hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+
+//_________________FUNCIONES PARA LIDER____________//
+stock UnirMiembroClan(playerid, id)
 {
-    if(dialogid == d_panel)
+    if(IsPlayerConnected(id))
     {
-        if(response)
+        new Float:idpos[3];
+        GetPlayerPos(id, idpos[0], idpos[1], idpos[2]);
+        if(IsPlayerInRangeOfPoint(playerid, 7.0, idpos[0], idpos[1], idpos[2]))
         {
-            switch(listitem)
+            if(ClanPlayer[id][Cp_Grupo] == 0)
             {
-                case 0:
-                {
-                    new colores_temp[3620];
-                    for(new i; i < sizeof(RandomColors); i++)
-                    {
-                        new temp_temp[256];
-                        format(temp_temp, 256, "{%06x}Color %d\n", RandomColors[i] >>> 8, i);
-                        strcat(colores_temp, temp_temp);
-                    }
-                    ShowPlayerDialog(playerid, d_clan_colores, DIALOG_STYLE_LIST, "Seleciona un color", colores_temp, "Aceptar", "Salir");
-                }
-                case 1: 
-                {
-                    if(Clanes[ClanPlayer[playerid][Cp_ID]][C_Territorio] == 0)
-                    {
-                        CrearTerritorio(playerid);
-                    }
-                    //SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Proximamente...");
-                }
-                case 2:
-                {
-                    new str[350];
-                    format(str, sizeof(str), "{ffffff}Clan ID: {%06x}%d\n{ffffff}Clan Lider: {%06x}%s\n{ffffff}Clan Miembros: {%06x}%d", Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_ID], 
-                    Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Owner], Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Miembros]);
-                    ShowPlayerDialog(playerid, d_clan_info, DIALOG_STYLE_MSGBOX, "Informacion", str, "Aceptar", "Salir");
-                }
-            }
-        }
-    }
-    if(dialogid == d_clan_colores)
-    {
-        if(response)
-        {
-            Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] = RandomColors[listitem];
-        }
-    }
-}
-//_________Panel____________//
-CMD:clan(playerid)
-{
-    if(ClanPlayer[playerid][Cp_Grupo] == 1)
-    {
-        new temp_nombre_clan[256];
-        format(temp_nombre_clan, 256, "{%06x}%s", Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Nombre]);
-        ShowPlayerDialog(playerid, d_panel, DIALOG_STYLE_LIST, temp_nombre_clan, "Color del Clan\nTerritorio\nInformacion", "Aceptar", "Salir");
-    }
-    return 1;
+                ClanPlayer[id][Cp_Grupo] = 1;
+                ClanPlayer[id][Cp_ID] = ClanPlayer[playerid][Cp_ID];
+                new str[128];
+                format(str, 128, "%s ha ingresado al clan!", ret_pName(id));
+                RadioClanes(playerid, str);
+            } else  ShowInfoForPlayer(playerid, "~r~El jugador ya tiene un clan", 3000);
+        } else  ShowInfoForPlayer(playerid, "~r~El jugador no se encuentra cerca", 3000);
+    } else  ShowInfoForPlayer(playerid, "~r~Jugador no conectado!", 3000);
 }
 
-CMD:saveclan(playerid)
+stock ExpulsarMiembroClan(playerid, id)
 {
-    GuardarGrupos();
-    return 1;
+    if(IsPlayerConnected(id))
+    {
+        if(ClanPlayer[id][Cp_Grupo] == ClanPlayer[playerid][Cp_Grupo])
+        {
+            ClanPlayer[id][Cp_Grupo] = 0;
+            ClanPlayer[id][Cp_ID] = 0;
+            new str[128];
+            format(str, 128, "%s fue expulsado del clan!", ret_pName(id));
+            RadioClanes(playerid, str);
+        } else ShowInfoForPlayer(playerid, "~r~El jugador no es parte de tu clan", 3000);
+    } else ShowInfoForPlayer(playerid, "~r~Jugador no conectado!", 3000);
+}
+
+stock SalirClan(playerid)
+{
+    if(ClanPlayer[playerid][Cp_Grupo] > 0)
+    {
+        ClanPlayer[playerid][Cp_Grupo] = 0;
+        ClanPlayer[playerid][Cp_ID] = 0;
+        new str[128];
+        format(str, 128, "%s salio del clan!", ret_pName(id));
+        RadioClanes(playerid, str);
+    }
 }
 
 stock RadioClanes(playerid, string[])

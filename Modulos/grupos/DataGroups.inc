@@ -1,4 +1,4 @@
-#define MAX_CLANES 200
+#define MAX_CLANES 500
 
 enum Clan{
     C_ID,
@@ -70,4 +70,10 @@ x1 = cx - (width / 2.0);
 x2 = cx + (width / 2.0);
 y1 = cy - (height / 2.0);
 y2 = cy + (height / 2.0);
+}
+
+GetCenterOfGangZone(Float:MinX, Float:MinY, Float:MaxX, Float:MaxY, &Float:X, &Float:Y)
+{
+	X = (MinX + MaxX) / 2.0;
+	Y = (MinY + MaxY) / 2.0;
 }
