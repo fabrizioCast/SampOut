@@ -75,6 +75,8 @@ public OnGameModeInit()
     O_infloor = 0;
     //_____Objetos_______//
     RespawnObjetos();
+    //____Clanes_____//
+    CargarTerritorios();
     return 1;
 }
 
