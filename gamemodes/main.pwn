@@ -11,6 +11,8 @@
 #include <streamer>
 #include <noti>
 #include <progressmessage>
+#include <mSelection>
+#include <gmenu>
 
 
 //------------------DEFINES-----------------//
@@ -27,6 +29,7 @@
 #include "../Modulos/Server/registry.inc"
 #include "../Modulos/loot/OinFloor.inc"
 #include "../Modulos/recursos/resources.inc"
+#include "../Modulos/construccion/construction.inc"
 
 
 //____________-MAPEOS____________________//
@@ -52,10 +55,10 @@ public OnGameModeInit()
 {
     //_______________MYSQL___________________//
     SQL::Connect(mysql_host, mysql_user, mysql_pass, mysql_database);
-    //______Mapeos_______//
+    //_________M A P E O S_________//
     CargarHospital();
     CargarMapeoCara();
-    //____TextDraw______//
+    //_________TextDraws_________//
     CargarClave();
     CargarEmail();
     CargarEdad();
@@ -63,20 +66,24 @@ public OnGameModeInit()
     CargarInventario();
     CargarRadar();
     CargarLogo();
-    //______Mysql_______//
+    //_________Cargar Datos_________//
     CargarRecursos();
     CargarGrupos();
-    //______Otros______//
+    //_________O B J E T O S_________//
+    RespawnObjetos();
+    //_________C L A N E S_________//
+    CargarTerritorios();
+    //_________Guardar Datos_________//
+    SetTimer("GuardarTodo", 900000, true);
+    //_________E x t r a s_________//
     SetGameModeText(NOMBRE_SV);
     LabelsDoors();
     SetWeather(20);
     DisableInteriorEnterExits();
     CargarApariencia();
     O_infloor = 0;
-    //_____Objetos_______//
-    RespawnObjetos();
-    //____Clanes_____//
-    CargarTerritorios();
+    //____________________________________//
+    ObjetosSelection_Puertas = LoadModelSelectionMenu("Objetos_Puertas.txt");
     return 1;
 }
 
@@ -88,15 +95,14 @@ public OnPlayerConnect(playerid)
     CargarTDProgress(playerid);
     CargarBotonesApariencia(playerid);
     CargarPlayerInventario(playerid);
-    PlayerTextDrawSetString(playerid, names[playerid], NombreJugador(playerid));
     CargarClave2(playerid);
     CargarEmail2(playerid);
     CargarEdad2(playerid);
     CargarLogin2(playerid);
+    //_________________________________________//
     MostrarLogo(playerid);
     //MostrarRadar(playerid);
     MostrarTerritorios(playerid);
-    clearChat(playerid);
     SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Cargando datos...");
     SetTimerEx("MostrarInicio", 3000, false, "d", playerid);
     SetSpawnInfo(playerid, 0, 0, 2349.4131,-700.9865,117.3094, 0, 0, 0,0, 0, 0, 0);
@@ -193,6 +199,12 @@ public KickearR(playerid)
 {
     Kick(playerid);
     return 1;
+}
+
+forward GuardarTodo();
+public GuardarTodo()
+{
+    GuardarGrupos();
 }
 
 stock SaveAccount(playerid)
