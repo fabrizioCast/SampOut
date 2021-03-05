@@ -304,19 +304,21 @@ stock GiveItem(playerid, itemidd, cantidad)
             found = true;
             break;
         }
-    }
-    if(!found)
-    {
-        for(new i; i< MAX_INV; i++)
+        else if(VE[playerid][Inv][i] == 0)
         {
-            if(VE[playerid][Inv][i] == 0)
-            {
-                VE[playerid][Inv][i] = itemidd;
-                Objetos[VE[playerid][Inv][i]][usos] += cantidad;
-                found = true;
-                break;
-            }
+            VE[playerid][Inv][i] = itemidd;
+            Objetos[VE[playerid][Inv][i]][usos] += cantidad;
+            found = true;
+            break;
         }
+    }
+    for(new i; i<MAX_INV; i++)
+    {
+      if(VE[playerid][Inv][i] == itemidd && Objetos[VE[playerid][Inv][i]][usos] == 0)
+      {
+            VE[playerid][Inv][i] = NADA;
+            break;
+      }  
     }
     if(!found)
     {
@@ -508,17 +510,19 @@ stock OpenInv(playerid)
     {
         PlayerTextDrawShow(playerid, PlayerTDI[playerid][i]);
     }
+    PlayerTextDrawSetString(playerid, names[playerid], NombreJugador(playerid));
+    PlayerTextDrawSetPreviewModel(playerid, showskin[playerid], GetPlayerSkin(playerid));
     PlayerTextDrawShow(playerid, names[playerid]);
     PlayerTextDrawShow(playerid, usard[playerid]);
     PlayerTextDrawShow(playerid, tirard[playerid]);
     PlayerTextDrawShow(playerid, sacard[playerid]);
     PlayerTextDrawShow(playerid, showskin[playerid]);
-    PlayerTextDrawSetPreviewModel(playerid, showskin[playerid], GetPlayerSkin(playerid));
     SelectTextDraw(playerid,  0xFFFFFFAA);
     ShowPlayerProgressBar(playerid, PlayerProgressBar[playerid][0]);
     ShowPlayerProgressBar(playerid, PlayerProgressBar[playerid][1]);
     VE[playerid][inmenu] = true;
     VE[playerid][Selected] = NADA;
+    ActualizarSelected(playerid);
     return 1;
 }
 

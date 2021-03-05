@@ -24,12 +24,13 @@
 #include "../Modulos/server/DataStore.inc"
 #include "../Modulos/grupos/groups.inc"
 #include "../Modulos/necesidades/needs.inc"
+#include "../Modulos/construccion/construction.inc"
 #include "../Modulos/inventario/inventory.inc"
 #include "../Modulos/tutorial/characterization.inc"
 #include "../Modulos/Server/registry.inc"
 #include "../Modulos/loot/OinFloor.inc"
 #include "../Modulos/recursos/resources.inc"
-#include "../Modulos/construccion/construction.inc"
+
 
 
 //____________-MAPEOS____________________//

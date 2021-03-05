@@ -57,7 +57,7 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
         }
         else if(VE[playerid][Mano][DER] == GUN9MM)
         {
-            GivePlayerWeapon(playerid, 24, 15);
+            GivePlayerWeapon(playerid, 22, 15);
             DestroyItemHand(playerid, DER);
             ShowInfoForPlayer(playerid, "~b~D.Eagle equipada", 3000);
         }
@@ -116,6 +116,18 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
                     ShowInfoForPlayer(playerid, str, 3000);
                 } else ShowInfoForPlayer(playerid, "~r~Tu radio ya esta cargada", 3000);
             } else ShowInfoForPlayer(playerid, "~r~No tienes una radio", 3000);
+        }
+        else if(VE[playerid][Mano][DER] == CANDADO)
+        {
+            for(new i; i < MAX_OBJETOS_SERVER; i++)
+            {
+                if(IsPlayerInRangeOfPoint(playerid, 4.0, Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2]))
+                {
+                    ShowPlayerDialog(playerid, d_objetos_pass_1, DIALOG_STYLE_INPUT, "Contraseña", "{FFC900}• {ffffff}Ingresa una nueva contraseña\n(Si no ingresas una tu contraseña sera: 0000)", "Aceptar", "Salir");
+                    DestroyItemHand(playerid, DER);
+                    break;
+                }
+            }
         }
         else ChangeHand(playerid);
     }

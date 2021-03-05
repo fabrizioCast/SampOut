@@ -29,7 +29,13 @@ enum{
     d_panel,
     d_clan_colores,
     d_clan_territorio,
-    d_clan_info
+    d_clan_info,
+    d_clan_reclutar,
+    d_clan_expulsar,
+    d_clan_crear,
+    d_objetos_crear,
+    d_objetos_pass,
+    d_objetos_pass_1
 };
 new Text:ClaveTD[15];
 new PlayerText:PlayerTD[MAX_PLAYERS][2];
@@ -106,5 +112,24 @@ clearChat(playerid)
 	}
 	return 1;
 }
+
+IsNumeric(const string[])
+{
+    return !sscanf(string, "{d}");
+}
+
+stock HexToRGBA(colour, &r, &g, &b, &a) //By Betamaster
+{
+    r = (colour >> 24) & 0xFF;
+    g = (colour >> 16) & 0xFF;
+    b = (colour >> 8) & 0xFF;
+    a = colour & 0xFF;
+}
+
+stock RGBAToHex(r, g, b, a) //By Betamaster
+{
+    return (r<<24 | g<<16 | b<<8 | a);
+}
+
 
 #include "../Modulos/server/doors.inc"
