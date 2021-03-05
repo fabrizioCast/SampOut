@@ -1,7 +1,6 @@
 #include <YSI\y_hooks>
 #include "../Modulos/construccion/DataConstruction.inc"
 
-new ob_temp[MAX_PLAYERS];
 
 CMD:construir(playerid)
 {
@@ -69,7 +68,23 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
     if (PRESSED( KEY_NO ))
     {
-        ShowPlayerDialog(playerid, d_objetos_pass, DIALOG_STYLE_PASSWORD, "Contraseña", "{FFC900}• {ffffff}Ingresa la contraseña", "Aceptar", "Salir");
+        new bool:found = false;
+        for(new i; i < MAX_OBJETOS_SERVER; i++)
+        {
+            if(IsPlayerInRangeOfPoint(playerid, 4.0, Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2]))
+            {
+                if(Objetosc[i][O_gPassword] == 0)
+                {
+                    MoverObjeto(playerid);
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if(!found)
+        {
+            ShowPlayerDialog(playerid, d_objetos_pass, DIALOG_STYLE_PASSWORD, "Contraseña", "{FFC900}• {ffffff}Ingresa la contraseña", "Aceptar", "Salir");
+        }
     }
 }
 
@@ -95,21 +110,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[5])
                 new long = strlen(inputtext);
                 if(long == 4)
                 {
-                    if(SQL::RowExists("objetos", "ID", ob_temp[playerid]))
-                    {
-                        new handle = SQL::Open(SQL::UPDATE, "objetos", "ID", ob_temp[playerid]);
-                        SQL::WriteString(handle, "Password", inputtext);
-                        SQL::Close(handle);
-                        Objetosc[ob_temp[playerid]][O_Password] = inputtext;
-                        new str[128];
-                        format(str, 128, "{36FF00}• {ffffff}Contraseña: %s", inputtext);
-                        SendClientMessage(playerid, -1, str);
-                    }
-                }
-                else
-                {
-                    ShowInfoForPlayer(playerid, "~r~Ingresa tu PIN de 4 caracteres", 3000);
-                    ShowPlayerDialog(playerid, d_objetos_pass_1, DIALOG_STYLE_INPUT, "Contraseña", "{FFC900}• {ffffff}Ingresa una nueva contraseña\n(Si no ingresas una tu contraseña sera: 0000)", "Aceptar", "Salir");
+                    PonerPass(playerid, inputtext);
                 }
             }
         }
@@ -125,6 +126,7 @@ stock CrearObjeto(playerid, modeloid, Float:X, Float:Y, Float:Z, Float:rX, Float
             new handle2 = SQL::Open(SQL::INSERT, "objetos");
             SQL::WriteInt(handle2, "ID", i);
             SQL::WriteInt(handle2, "ModelID", modeloid);
+            SQL::WriteInt(handle2, "gPassword", 0);
             SQL::WriteString(handle2, "Owner", ret_pName(playerid));
             SQL::WriteString(handle2, "Password", "0000");
             SQL::WriteFloat(handle2, "Vida", 1000.00);
@@ -147,17 +149,13 @@ stock CrearObjeto(playerid, modeloid, Float:X, Float:Y, Float:Z, Float:rX, Float
             Objetosc[i][O_Rot][1] = rY;
             Objetosc[i][O_Rot][2] = rZ;
             Objetosc[i][O_Password] = "0000";
+            Objetosc[i][O_gPassword] = 0;
             Objetosc[i][O_Create] = CreateObject(modeloid, X, Y, Z, rX, rY, rZ, DISTANCIA_DIBUJADO_OBJ);
             if(ObjetoConFuncion(modeloid) > 0)
             {
                 new str[128];
                 format(str, 128, "{949090}Usa {14528D}N {949090}para interactuar\n{949090}Resistencia: {14528D}%.0f", Objetosc[i][O_Vida]);
                 Objetosc[i][O_Text] = Create3DTextLabel(str, -1, X, Y, Z, 6.0, 0);
-                if(ObjetoConFuncion(modeloid) == 1 || ObjetoConFuncion(modeloid) == 2)
-                {
-                    ShowPlayerDialog(playerid, d_objetos_pass_1, DIALOG_STYLE_INPUT, "Contraseña", "{FFC900}• {ffffff}Ingresa una nueva contraseña\n(Si no ingresas una tu contraseña sera: 0000)", "Aceptar", "Salir");
-                    ob_temp[playerid] = Objetosc[i][O_ID];
-                }
             }
             else
             {
@@ -170,7 +168,7 @@ stock CrearObjeto(playerid, modeloid, Float:X, Float:Y, Float:Z, Float:rX, Float
     }
 }
 
-stock MoverObjeto(playerid, pass[])
+stock MoverObjeto(playerid, pass[] = "")
 {
     for(new i; i < MAX_OBJETOS_SERVER; i++)
     {
@@ -179,6 +177,21 @@ stock MoverObjeto(playerid, pass[])
             if(ObjetoConFuncion(Objetosc[i][O_ModelID]) == 1)
             {
                 if(!strcmp(pass, Objetosc[i][O_Password]))
+                {
+                    if(Objetosc[i][O_Abierto] == false)
+                    {
+                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
+                        Objetosc[i][O_Abierto] = true;
+                        break;
+                    } 
+                    else 
+                    {
+                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
+                        Objetosc[i][O_Abierto] = false;
+                        break;
+                    }
+                }
+                else if(Objetosc[i][O_gPassword] == 0)
                 {
                     if(Objetosc[i][O_Abierto] == false)
                     {
@@ -211,12 +224,43 @@ stock MoverObjeto(playerid, pass[])
                         Objetosc[i][O_Abierto] = false;
                         break;
                     }
-                } else ShowInfoForPlayer(playerid, "~r~Incorrecto", 3000); 
+                }
+                else if(Objetosc[i][O_gPassword] == 0)
+                {
+                    if(Objetosc[i][O_Abierto] == false)
+                    {
+                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
+                        Objetosc[i][O_Abierto] = true;
+                        break;
+                    } 
+                    else 
+                    {
+                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
+                        Objetosc[i][O_Abierto] = false;
+                        break;
+                    }
+                } else ShowInfoForPlayer(playerid, "~r~Incorrecto", 3000);
             }
         }
     }
 }
 
+stock PonerPass(playerid, pass[5])
+{
+    for(new i; i < MAX_OBJETOS_SERVER; i++)
+    {
+        if(IsPlayerInRangeOfPoint(playerid, 4.0, Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2]))
+        {
+            Objetosc[i][O_gPassword] = 1;
+            Objetosc[i][O_Password] = pass;
+            new handle = SQL::Open(SQL::UPDATE, "objetos", "ID", Objetosc[i][O_ID]);
+            SQL::WriteString(handle, "Password", pass);
+            SQL::WriteInt(handle, "gPassword", 1);
+            SQL::Close(handle);
+            break;
+        }
+    }
+}
 ObjetoConFuncion(objectid)
 {
     switch(objectid)

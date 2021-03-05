@@ -13,6 +13,7 @@ enum ObjetosIC{
     O_ID,
     O_ModelID,
     O_Owner[MAX_PLAYER_NAME],
+    O_gPassword,
     O_Password[5],
     O_Create,
     Float:O_Vida,
