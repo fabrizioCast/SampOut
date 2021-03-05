@@ -85,6 +85,7 @@ public OnGameModeInit()
     O_infloor = 0;
     //____________________________________//
     ObjetosSelection_Puertas = LoadModelSelectionMenu("Objetos_Puertas.txt");
+    CargarObjetosc();
     return 1;
 }
 
@@ -206,6 +207,7 @@ forward GuardarTodo();
 public GuardarTodo()
 {
     GuardarGrupos();
+    GuardarObjetosc();
 }
 
 stock SaveAccount(playerid)
@@ -251,21 +253,21 @@ stock SaveAccount(playerid)
             SQL::WriteInt(handle, "Slot13", VE[playerid][Inv][12]);
             SQL::WriteInt(handle, "Slot14", VE[playerid][Inv][13]);
             SQL::WriteInt(handle, "Slot15", VE[playerid][Inv][14]);
-            SQL::WriteInt(handle, "Usos1", Objetos[VE[playerid][Inv][0]][usos]);
-            SQL::WriteInt(handle, "Usos2", Objetos[VE[playerid][Inv][1]][usos]);
-            SQL::WriteInt(handle, "Usos3", Objetos[VE[playerid][Inv][2]][usos]);
-            SQL::WriteInt(handle, "Usos4", Objetos[VE[playerid][Inv][3]][usos]);
-            SQL::WriteInt(handle, "Usos5", Objetos[VE[playerid][Inv][4]][usos]);
-            SQL::WriteInt(handle, "Usos6", Objetos[VE[playerid][Inv][5]][usos]);
-            SQL::WriteInt(handle, "Usos7", Objetos[VE[playerid][Inv][6]][usos]);
-            SQL::WriteInt(handle, "Usos8", Objetos[VE[playerid][Inv][7]][usos]);
-            SQL::WriteInt(handle, "Usos9", Objetos[VE[playerid][Inv][8]][usos]);
-            SQL::WriteInt(handle, "Usos10", Objetos[VE[playerid][Inv][9]][usos]);
-            SQL::WriteInt(handle, "Usos11", Objetos[VE[playerid][Inv][10]][usos]);
-            SQL::WriteInt(handle, "Usos12", Objetos[VE[playerid][Inv][11]][usos]);
-            SQL::WriteInt(handle, "Usos13", Objetos[VE[playerid][Inv][12]][usos]);
-            SQL::WriteInt(handle, "Usos14", Objetos[VE[playerid][Inv][13]][usos]);
-            SQL::WriteInt(handle, "Usos15", Objetos[VE[playerid][Inv][14]][usos]);
+            SQL::WriteInt(handle, "Usos1", VE[playerid][usos][VE[playerid][Inv][0]]);
+            SQL::WriteInt(handle, "Usos2", VE[playerid][usos][VE[playerid][Inv][1]]);
+            SQL::WriteInt(handle, "Usos3", VE[playerid][usos][VE[playerid][Inv][2]]);
+            SQL::WriteInt(handle, "Usos4", VE[playerid][usos][VE[playerid][Inv][3]]);
+            SQL::WriteInt(handle, "Usos5", VE[playerid][usos][VE[playerid][Inv][4]]);
+            SQL::WriteInt(handle, "Usos6", VE[playerid][usos][VE[playerid][Inv][5]]);
+            SQL::WriteInt(handle, "Usos7", VE[playerid][usos][VE[playerid][Inv][6]]);
+            SQL::WriteInt(handle, "Usos8", VE[playerid][usos][VE[playerid][Inv][7]]);
+            SQL::WriteInt(handle, "Usos9", VE[playerid][usos][VE[playerid][Inv][8]]);
+            SQL::WriteInt(handle, "Usos10", VE[playerid][usos][VE[playerid][Inv][9]]);
+            SQL::WriteInt(handle, "Usos11", VE[playerid][usos][VE[playerid][Inv][10]]);
+            SQL::WriteInt(handle, "Usos12", VE[playerid][usos][VE[playerid][Inv][11]]);
+            SQL::WriteInt(handle, "Usos13", VE[playerid][usos][VE[playerid][Inv][12]]);
+            SQL::WriteInt(handle, "Usos14", VE[playerid][usos][VE[playerid][Inv][13]]);
+            SQL::WriteInt(handle, "Usos15", VE[playerid][usos][VE[playerid][Inv][14]]);
             SQL::Close(handle);
         }
         if(SQL::RowExists("objetosplayer", "ID", CuentaInfo[playerid][ID]))
@@ -320,21 +322,21 @@ stock CargarDataPlayer(playerid)
     SQL::ReadInt(handle2, "Slot13", VE[playerid][Inv][12]);
     SQL::ReadInt(handle2, "Slot14", VE[playerid][Inv][13]);
     SQL::ReadInt(handle2, "Slot15", VE[playerid][Inv][14]);
-    SQL::ReadInt(handle2, "Usos1", Objetos[VE[playerid][Inv][0]][usos]);
-    SQL::ReadInt(handle2, "Usos2", Objetos[VE[playerid][Inv][1]][usos]);
-    SQL::ReadInt(handle2, "Usos3", Objetos[VE[playerid][Inv][2]][usos]);
-    SQL::ReadInt(handle2, "Usos4", Objetos[VE[playerid][Inv][3]][usos]);
-    SQL::ReadInt(handle2, "Usos5", Objetos[VE[playerid][Inv][4]][usos]);
-    SQL::ReadInt(handle2, "Usos6", Objetos[VE[playerid][Inv][5]][usos]);
-    SQL::ReadInt(handle2, "Usos7", Objetos[VE[playerid][Inv][6]][usos]);
-    SQL::ReadInt(handle2, "Usos8", Objetos[VE[playerid][Inv][7]][usos]);
-    SQL::ReadInt(handle2, "Usos9", Objetos[VE[playerid][Inv][8]][usos]);
-    SQL::ReadInt(handle2, "Usos10", Objetos[VE[playerid][Inv][9]][usos]);
-    SQL::ReadInt(handle2, "Usos11", Objetos[VE[playerid][Inv][10]][usos]);
-    SQL::ReadInt(handle2, "Usos12", Objetos[VE[playerid][Inv][11]][usos]);
-    SQL::ReadInt(handle2, "Usos13", Objetos[VE[playerid][Inv][12]][usos]);
-    SQL::ReadInt(handle2, "Usos14", Objetos[VE[playerid][Inv][13]][usos]);
-    SQL::ReadInt(handle2, "Usos15", Objetos[VE[playerid][Inv][14]][usos]);
+    SQL::ReadInt(handle2, "Usos1",  VE[playerid][usos][VE[playerid][Inv][0]]);
+    SQL::ReadInt(handle2, "Usos2",  VE[playerid][usos][VE[playerid][Inv][1]]);
+    SQL::ReadInt(handle2, "Usos3",  VE[playerid][usos][VE[playerid][Inv][2]]);
+    SQL::ReadInt(handle2, "Usos4",  VE[playerid][usos][VE[playerid][Inv][3]]);
+    SQL::ReadInt(handle2, "Usos5",  VE[playerid][usos][VE[playerid][Inv][4]]);
+    SQL::ReadInt(handle2, "Usos6",  VE[playerid][usos][VE[playerid][Inv][5]]);
+    SQL::ReadInt(handle2, "Usos7",  VE[playerid][usos][VE[playerid][Inv][6]]);
+    SQL::ReadInt(handle2, "Usos8",  VE[playerid][usos][VE[playerid][Inv][7]]);
+    SQL::ReadInt(handle2, "Usos9",  VE[playerid][usos][VE[playerid][Inv][8]]);
+    SQL::ReadInt(handle2, "Usos10",  VE[playerid][usos][VE[playerid][Inv][9]]);
+    SQL::ReadInt(handle2, "Usos11",  VE[playerid][usos][VE[playerid][Inv][10]]);
+    SQL::ReadInt(handle2, "Usos12",  VE[playerid][usos][VE[playerid][Inv][11]]);
+    SQL::ReadInt(handle2, "Usos13",  VE[playerid][usos][VE[playerid][Inv][12]]);
+    SQL::ReadInt(handle2, "Usos14",  VE[playerid][usos][VE[playerid][Inv][13]]);
+    SQL::ReadInt(handle2, "Usos15",  VE[playerid][usos][VE[playerid][Inv][14]]);
     SQL::Close(handle2);
     new handle3 = SQL::Open(SQL::READ, "objetosplayer", "ID", CuentaInfo[playerid][ID]);
     SQL::ReadInt(handle3, "GetRadio", Radio[playerid][GetRadio]);

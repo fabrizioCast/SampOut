@@ -123,8 +123,11 @@ hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
             {
                 if(IsPlayerInRangeOfPoint(playerid, 4.0, Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2]))
                 {
-                    ShowPlayerDialog(playerid, d_objetos_pass_1, DIALOG_STYLE_INPUT, "Contraseña", "{FFC900}• {ffffff}Ingresa una nueva contraseña\n(Si no ingresas una tu contraseña sera: 0000)", "Aceptar", "Salir");
-                    DestroyItemHand(playerid, DER);
+                    if(!strcmp(Objetosc[i][O_Owner], ret_pName(playerid)))
+                    {
+                        ShowPlayerDialog(playerid, d_objetos_pass_1, DIALOG_STYLE_INPUT, "Contraseña", "{FFC900}• {ffffff}Ingresa una nueva contraseña\n(Si no ingresas una tu contraseña sera: 0000)", "Aceptar", "Salir");
+                        DestroyItemHand(playerid, DER);
+                    }
                     break;
                 }
             }

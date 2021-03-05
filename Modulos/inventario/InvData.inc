@@ -34,14 +34,16 @@
 
 new O_infloor; // Contador de objetos en el server.
 
+new InvSelect[MAX_PLAYERS];
 
 enum Inventory{
     bool:inmenu,
-    Inv[16],
+    Inv[17],
     Mano[2],
     Selected,
     weapon[4],
     ammo[4],
+    usos[17],
     usosder,
     usosizq
 };

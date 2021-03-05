@@ -11,39 +11,36 @@
 #include "../Modulos/grupos/territories.inc"
 
 
-
-CMD:crearclan(playerid, params[1])
-{
-    new nombreclan[20];
-    if(sscanf(params, "s[20]", nombreclan)) return SendClientMessage(playerid, -1, "{FF0000}• {ffffff}Uso: /crearclan [Nombre del Clan]");
-    {
-        new rnd = random(206);
-        CrearClan(playerid, nombreclan, RandomColors[rnd]);
-    }
-    return 1;
-}
-
 //_________Panel____________//
 CMD:clan(playerid)
 {
     if(ClanPlayer[playerid][Cp_Grupo] == 1)
     {
-        new temp_nombre_clan[256];
-        format(temp_nombre_clan, 256, "{%06x}%s", Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Nombre]);
-        ShowPlayerDialog(playerid, d_panel, DIALOG_STYLE_LIST, temp_nombre_clan, "Agregar Miembro\nExpulsar Miembro\nColor del Clan\nTerritorio\nInformacion", "Aceptar", "Salir");
-    }
+        if(ClanPlayer[playerid][Cp_Lider] == 1)
+        {
+            new temp_nombre_clan[256];
+            format(temp_nombre_clan, 256, "{%06x}%s", Clanes[ClanPlayer[playerid][Cp_ID]][C_Color] >>> 8, Clanes[ClanPlayer[playerid][Cp_ID]][C_Nombre]);
+            ShowPlayerDialog(playerid, d_panel, DIALOG_STYLE_LIST, temp_nombre_clan, "Agregar Miembro\nExpulsar Miembro\nColor del Clan\nTerritorio\nInformacion", "Aceptar", "Salir");
+        }
+    } else ShowPlayerDialog(playerid, d_clan_crear, DIALOG_STYLE_INPUT, "Clanes", "{FFC900}• {ffffff}Ingresa el nombre para tu clan", "Crear", "Salir");
     return 1;
 }
-
-CMD:saveclan(playerid)
-{
-    GuardarGrupos();
-    return 1;
-}
-
 
 hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
+    if(dialogid == d_clan_crear)
+    {
+        if(response)
+        {
+            if(strlen(inputtext) <= 20)
+            {
+                new nombre_temp[20];
+                format(nombre_temp, 20, "%s", inputtext);
+                new rnd = random(206);
+                CrearClan(playerid, nombre_temp, RandomColors[rnd]);
+            } else ShowPlayerDialog(playerid, d_clan_crear, DIALOG_STYLE_INPUT, "Clanes", "{FFC900}• {ffffff}Ingresa el nombre para tu clan", "Crear", "Salir");
+        }
+    }
     if(dialogid == d_panel)
     {
         if(response)
@@ -70,7 +67,7 @@ hook OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                         if(PuedeReclamarTerritorio(playerid) > 0)
                         {
                             CrearTerritorio(playerid);
-                        } else ShowInfoForPlayer(playerid, "~r~Busca otro lugar", 3000);
+                        } else ShowInfoForPlayer(playerid, "~r~Este territorio ya esta ocupado", 3000);
                     }
                 }
                 case 4:
@@ -155,14 +152,15 @@ stock CrearClan(playerid, nombre[20], color)
             SQL::WriteInt(handle, "Grupo", ClanPlayer[playerid][Cp_Grupo]);
             SQL::WriteInt(handle, "GrupoLider", ClanPlayer[playerid][Cp_Lider]);
             SQL::Close(handle);
-            new str[128];
+            new str[128], str2[128];
             format(str, 128, "{36FF00}• {ffffff}Felicidades, creaste el grupo {%06x}%s", Clanes[pia][C_Color] >>> 8, Clanes[pia][C_Nombre]);
             SendClientMessage(playerid, -1, str);
+            format(str2, 128, "{FFC900}• {ffffff}Usa {%06x}/clan {ffffff}para administrar tu clan!", Clanes[pia][C_Color] >>> 8);
+            SendClientMessage(playerid, -1, str2);
             break;
         }
     }
 }
-
 
 //_________________FUNCIONES PARA LIDER____________//
 stock UnirMiembroClan(playerid, id)
@@ -223,7 +221,7 @@ stock RadioClanes(playerid, string[])
                 if(ClanPlayer[playerid][Cp_ID] == ClanPlayer[i][Cp_ID])
                 {
                     new str[256];
-                    format(str, 256, "{%06x}[%s] %s: %s", Clanes[p][C_Color] >>> 8, Clanes[p][C_Nombre], ret_pName(playerid), string);
+                    format(str, 256, "{%06x}[%s] %s: {ffffff}%s", Clanes[p][C_Color] >>> 8, Clanes[p][C_Nombre], ret_pName(playerid), string);
                     SendClientMessage(i, -1, str);
                 }
             }
@@ -256,6 +254,7 @@ stock CargarGrupos()
     }
     printf("[Clanes Cargados]: %d", countclanes);
 }
+
 stock GuardarGrupos()
 {
     for(new i = 1; i < MAX_CLANES; i++)

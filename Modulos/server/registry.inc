@@ -264,12 +264,6 @@ stock FIX_valstr(dest[], value, bool:pack = false)
 }
 #define valstr FIX_valstr
 
-IsNumeric(const string[])
-{
-    return !sscanf(string, "{d}");
-}
-
-
 
 
 //-------------------------TEXTDRAW REGISTRO-----------------------//

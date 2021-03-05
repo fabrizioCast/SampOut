@@ -72,8 +72,9 @@ y1 = cy - (height / 2.0);
 y2 = cy + (height / 2.0);
 }
 
-GetCenterOfGangZone(Float:MinX, Float:MinY, Float:MaxX, Float:MaxY, &Float:X, &Float:Y)
+
+/*GetCenterOfGangZone(Float:MinX, Float:MinY, Float:MaxX, Float:MaxY, &Float:X, &Float:Y)
 {
 	X = (MinX + MaxX) / 2.0;
 	Y = (MinY + MaxY) / 2.0;
-}
+}*/

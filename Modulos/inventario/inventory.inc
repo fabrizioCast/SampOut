@@ -40,16 +40,16 @@ hook Inv_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
 {
     if(playertextid == tirard[playerid])
     {
-        if(VE[playerid][Selected] != NADA)
+        if(InvSelect[playerid] != NADA)
         {
             for(new i; i<MAX_INV; i++)
             {
-                if(VE[playerid][Inv][i] == VE[playerid][Selected])
+                if(VE[playerid][Inv][i] == InvSelect[playerid])
                 {
-                    if(Objetos[VE[playerid][Inv][i]][usos] == 1)
+                    if(VE[playerid][usos][VE[playerid][Inv][i]] == 1)
                     {
                         VE[playerid][Inv][i] = NADA;
-                        DropObjeto(playerid, VE[playerid][Selected], 1);
+                        DropObjeto(playerid, InvSelect[playerid], 1);
                         closeInv(playerid);
                         OpenInv(playerid);
                         break;
@@ -57,7 +57,7 @@ hook Inv_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                     else
                     {
                         ShowPlayerDialog(playerid, tirar_dialog, DIALOG_STYLE_INPUT, "Tirar Objeto", "Ingresa la cantidad que deseas tirar", "Aceptar", "Salir");
-                        temp_tirar[playerid] = i;
+                        temp_tirar[playerid] = VE[playerid][Inv][i];
                         break;
                     }
                 }
@@ -70,148 +70,145 @@ hook Inv_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
         {
             SaveObject(playerid, VE[playerid][Mano][DER]);
             OpenInv(playerid);
-            OpenInv(playerid);
         }
         else if(VE[playerid][Mano][IZQ] != NADA)
         {
             SaveObject(playerid, VE[playerid][Mano][IZQ]);
             OpenInv(playerid);
-            OpenInv(playerid);
         }
     }
     if(playertextid == sacard[playerid])
     {
-        if(VE[playerid][Selected] != NADA)
+        if(InvSelect[playerid] != NADA)
         {
-            TakeObject(playerid, VE[playerid][Selected], 1);
-            OpenInv(playerid);
+            TakeObject(playerid, InvSelect[playerid], 1);
             OpenInv(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][0])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][0];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][0];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][1])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][1];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][1];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][2])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][2];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][2];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][3])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][3];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][3];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][4])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][4];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][4];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][4])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][4];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][4];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][5])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][5];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][5];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][6])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][6];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][6];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][7])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][7];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][7];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][8])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][8];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][8];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][9])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][9];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][9];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][10])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][10];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][10];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][11])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][11];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][11];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][12])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][12];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][12];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][13])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][13];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][13];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
     }
     if(playertextid == PlayerTDI[playerid][14])
     {
-        VE[playerid][Selected] = VE[playerid][Inv][14];
-        if(VE[playerid][Selected] != NADA)
+        InvSelect[playerid] = VE[playerid][Inv][14];
+        if(InvSelect[playerid] != NADA)
         {
             ActualizarSelected(playerid);
         }
@@ -227,14 +224,15 @@ hook Inv_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
             new temp_cantidad_tirar = strval(inputtext);
             if(temp_cantidad_tirar > 0)
             {
-                if(temp_cantidad_tirar <= Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos])
+                if(temp_cantidad_tirar <= VE[playerid][usos][ temp_tirar[playerid] ])
                 {
-                    Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos] -= temp_cantidad_tirar;
-                    if(Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos] == 0)
+                    //Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos] 
+                    VE[playerid][usos][ temp_tirar[playerid] ] -= temp_cantidad_tirar;
+                    if(VE[playerid][usos][ temp_tirar[playerid] ] == 0)
                     {
-                        VE[playerid][Inv][temp_tirar[playerid]] = NADA;
+                        VE[playerid][Inv][ temp_tirar[playerid] ] = NADA;
                     }
-                    DropObjeto(playerid, VE[playerid][Selected], temp_cantidad_tirar);
+                    DropObjeto(playerid, InvSelect[playerid], temp_cantidad_tirar);
                     closeInv(playerid);
                     OpenInv(playerid);
                 } else return ShowInfoForPlayer(playerid, "~r~No tienes esa cantidad!", 4000);
@@ -300,21 +298,21 @@ stock GiveItem(playerid, itemidd, cantidad)
     {
         if(VE[playerid][Inv][i] == itemidd)
         {
-            Objetos[VE[playerid][Inv][i]][usos] += cantidad;
+            VE[playerid][usos][VE[playerid][Inv][i]] += cantidad;
             found = true;
             break;
         }
         else if(VE[playerid][Inv][i] == 0)
         {
             VE[playerid][Inv][i] = itemidd;
-            Objetos[VE[playerid][Inv][i]][usos] += cantidad;
+            VE[playerid][usos][VE[playerid][Inv][i]] += cantidad;
             found = true;
             break;
         }
     }
     for(new i; i<MAX_INV; i++)
     {
-      if(VE[playerid][Inv][i] == itemidd && Objetos[VE[playerid][Inv][i]][usos] == 0)
+      if(VE[playerid][Inv][i] == itemidd && VE[playerid][usos][VE[playerid][Inv][i]] == 0)
       {
             VE[playerid][Inv][i] = NADA;
             break;
@@ -334,19 +332,21 @@ stock GiveItemAdmin(playerid, itemidd, cantidad)
         {
             if(VE[playerid][Inv][i] == itemidd)
             {
-                Objetos[VE[playerid][Inv][i]][usos] += cantidad;
-                found = true;
+                VE[playerid][usos][VE[playerid][Inv][i]] += cantidad;
+                //Objetos[ VE[playerid][Inv][i] ][usos] += cantidad;
                 new mensaje[128];
-                format(mensaje, sizeof(mensaje), "Un administrador te dio el objeto: {154265}%s (%d)", Objetos[VE[playerid][Inv][i]][name], cantidad);
+                format(mensaje, sizeof(mensaje), "Un administrador te dio el objeto: {154265}%s (%d)", Objetos[VE[playerid][Inv][i]][name], VE[playerid][usos][VE[playerid][Inv][i]]);
                 SendClientMessage(playerid, -1, mensaje);
+                found = true;
                 break;
             }
             else if(VE[playerid][Inv][i] == 0)
             {
                 VE[playerid][Inv][i] = itemidd;
-                Objetos[VE[playerid][Inv][i]][usos] += cantidad-1;
+                //Objetos[ VE[playerid][Inv][i] ][usos] += cantidad-1;
+                VE[playerid][usos][VE[playerid][Inv][i]] += cantidad-1;
                 new mensaje[128];
-                format(mensaje, sizeof(mensaje), "Un administrador te dio el objeto: {154265}%s (%d)", Objetos[VE[playerid][Inv][i]][name], cantidad);
+                format(mensaje, sizeof(mensaje), "Un administrador te dio el objeto: {154265}%s (%d)", Objetos[VE[playerid][Inv][i]][name], VE[playerid][usos][VE[playerid][Inv][i]]);
                 SendClientMessage(playerid, -1, mensaje);
                 found = true;
                 break;
@@ -408,8 +408,9 @@ stock TakeObject(playerid, item, cantidad)
     {
         if(VE[playerid][Inv][i] == item)
         {
-            Objetos[VE[playerid][Inv][i]][usos] -= cantidad;
-            if(Objetos[VE[playerid][Inv][i]][usos] <= 0)
+            VE[playerid][usos][VE[playerid][Inv][i]] -= cantidad;
+            //Objetos[VE[playerid][Inv][i]][usos] -= cantidad;
+            if(VE[playerid][usos][VE[playerid][Inv][i]] <= 0)
             {
                 VE[playerid][Inv][i] = NADA;
             }
@@ -510,6 +511,8 @@ stock OpenInv(playerid)
     {
         PlayerTextDrawShow(playerid, PlayerTDI[playerid][i]);
     }
+    ActualizarSelected(playerid);
+    InvSelect[playerid] = NADA;
     PlayerTextDrawSetString(playerid, names[playerid], NombreJugador(playerid));
     PlayerTextDrawSetPreviewModel(playerid, showskin[playerid], GetPlayerSkin(playerid));
     PlayerTextDrawShow(playerid, names[playerid]);
@@ -521,8 +524,6 @@ stock OpenInv(playerid)
     ShowPlayerProgressBar(playerid, PlayerProgressBar[playerid][0]);
     ShowPlayerProgressBar(playerid, PlayerProgressBar[playerid][1]);
     VE[playerid][inmenu] = true;
-    VE[playerid][Selected] = NADA;
-    ActualizarSelected(playerid);
     return 1;
 }
 
@@ -568,24 +569,16 @@ stock ActualizarSelected(playerid)
     PlayerTextDrawShow(playerid, infocantidad[playerid]);
     PlayerTextDrawShow(playerid, infodes[playerid]);
     PlayerTextDrawShow(playerid, infoobjeto[playerid]);
-    PlayerTextDrawSetPreviewModel(playerid, showpreview[playerid], Objetos[VE[playerid][Selected]][model]);
-    new showusos[5];
-    valstr(showusos, Objetos[VE[playerid][Selected]][usos]);
-    PlayerTextDrawSetString(playerid, infoobjeto[playerid], Objetos[VE[playerid][Selected]][name]);
+    PlayerTextDrawSetPreviewModel(playerid, showpreview[playerid], Objetos[InvSelect[playerid]][model]);
+    new showusos[128];
+    valstr(showusos, VE[playerid][usos][InvSelect[playerid]]);
+    PlayerTextDrawSetString(playerid, infoobjeto[playerid], Objetos[InvSelect[playerid]][name]);
     PlayerTextDrawSetString(playerid, infocantidad[playerid], showusos);
-    PlayerTextDrawSetString(playerid, infodes[playerid], Objetos[VE[playerid][Selected]][Descripcion]);
+    PlayerTextDrawSetString(playerid, infodes[playerid], Objetos[InvSelect[playerid]][Descripcion]);
     PlayerTextDrawHide(playerid, showpreview[playerid]);
     PlayerTextDrawShow(playerid, showpreview[playerid]);
     return 1;
 }
-
-
-stock IsWeapon(weaponid)
-{
-    if(weaponid == 10 || weaponid == 11 || weaponid == 12 || weaponid == 13) return true;
-    else return false;
-}
-
 
 stock closeInv(playerid)
 {
@@ -610,7 +603,7 @@ stock closeInv(playerid)
     HidePlayerProgressBar(playerid, PlayerProgressBar[playerid][1]);
     CancelSelectTextDraw(playerid);
     VE[playerid][inmenu] = false;
-    VE[playerid][Selected] = NADA;
+    InvSelect[playerid] = NADA;
     return 1;
 }
 

@@ -19,13 +19,13 @@ stock const Float:CoordLootBasicos[][] = {
 };
 //==========[IDS OBJETOS BASICOS]==================//
 new ObjetosBasicos[][] = {
+    {4},
+    {4},
+    {9},
     {10},
+    {5},
     {11},
-    {12},
-    {13},
-    {14},
-    {15},
-    {16}
+    {5}
 };
 
 
@@ -48,7 +48,19 @@ stock const Float:CoordLootMedico[][] = {
 	{-320.2326,1048.2341,20.3403}, // loot medico
 	{-330.7688,1050.7594,19.7392}, // loot medico
 	{1584.0470,1769.0239,10.8203}, // loot medico
-	{1585.0011,1750.3346,10.8203} // loot medico
+	{1585.0011,1750.3346,10.8203}, // loot medico
+    {1399.9797,-41.1016,1001.6398},
+    {1408.7604,-39.5511,1000.8640},
+    {1396.6061,-30.4463,1002.3957},
+    {1387.2592,-42.9015,1001.0812},
+    {1387.1370,-26.8265,1001.0812},
+    {1392.0691,-26.2041,1001.5768},
+    {1384.1349,-41.6313,1001.6016},
+    {1379.8138,-41.7700,1001.6016},
+    {1379.2269,-26.9748,1001.6016},
+    {1414.2997,-41.1525,1001.0812},
+    {1425.3735,-42.2794,1001.0712},
+    {1423.6881,-29.3348,1001.0712}
 };
 
 
@@ -57,6 +69,7 @@ stock CrearOInFloor(Float:Floorx, Float:Floory, Float:Floorz, itemfloor)
 {
     ObjetosPiso[O_infloor][itemid] = itemfloor;
     ObjetosPiso[O_infloor][modelid] = Objetos[itemfloor][model];
+    ObjetosPiso[O_infloor][usos] = 1;
     ObjetosPiso[O_infloor][pos][0] = Floorx;
     ObjetosPiso[O_infloor][pos][1] = Floory;
     ObjetosPiso[O_infloor][pos][2] = Floorz;
@@ -84,9 +97,9 @@ stock RandomType(type)
 stock RespawnObjetos()
 {
     new contadorobjetos;
-    for(new i; i < sizeof CoordLootBasicos; i++)
+    for(new i; i < sizeof CoordLootMedico; i++)
     {
-        CrearOInFloor(CoordLootBasicos[i][0], CoordLootBasicos[i][1], CoordLootBasicos[i][2], RandomType(1));
+        CrearOInFloor(CoordLootMedico[i][0], CoordLootMedico[i][1], CoordLootMedico[i][2], RandomType(1));
         contadorobjetos++;
     }
     printf("[SampOut]: Se respawnearon %d objetos.", contadorobjetos);

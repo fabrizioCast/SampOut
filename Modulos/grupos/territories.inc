@@ -63,11 +63,11 @@ stock MostrarTerritorios(playerid)
                 HexToRGBA(Clanes[i][C_Color], r, g, b, a);
                 color_terri = RGBAToHex(r, g, b, 135);
                 GangZoneShowForPlayer(playerid, Clanes[i][C_GangZone], color_terri);
-                printf("%d", i);
             }
         }
     }
 }
+
 
 PuedeReclamarTerritorio(playerid)
 {
@@ -89,4 +89,9 @@ stock ActualizarColorTerritorio(playerid)
     HexToRGBA(Clanes[ ClanPlayer[playerid][Cp_ID] ][C_Color], r, g, b, a);
     color_terri = RGBAToHex(r, g, b, 135);
     GangZoneShowForAll(Clanes[ ClanPlayer[playerid][Cp_ID] ][C_GangZone], color_terri);
+}
+
+stock MoverTerritorio(playerid)
+{
+    
 }

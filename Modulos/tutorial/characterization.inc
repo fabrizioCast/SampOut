@@ -84,6 +84,7 @@ hook Ch_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 Necesidades[playerid][N_Hambre] = 50.00;
                 Necesidades[playerid][N_Sed] = 50.00;
                 CuentaInfo[playerid][Skin] = GetPlayerSkin(playerid);
+                GetPlayerHealth(playerid, CuentaInfo[playerid][Vida]);
                 new handle = SQL::Open(SQL::INSERT, "usuarios");
                 SQL::ToggleAutoIncrement(handle, true);
                 SQL::WriteString(handle, "Nombre", ret_pName(playerid));
@@ -97,10 +98,16 @@ hook Ch_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 SQL::WriteFloat(handle, "PosZ", 117.3094);
                 SQL::WriteFloat(handle, "Hambre", Necesidades[playerid][N_Hambre]);
                 SQL::WriteFloat(handle, "Sed", Necesidades[playerid][N_Sed]);
-                SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][1], Necesidades[playerid][N_Hambre]);
-                SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][0], Necesidades[playerid][N_Sed]);
+                SQL::WriteFloat(handle, "Vida", CuentaInfo[playerid][Vida]);
+                SQL::WriteInt(handle, "Coin", CuentaInfo[playerid][Coin]);
+                SQL::WriteInt(handle, "GrupoID", ClanPlayer[playerid][Cp_ID]);
+                SQL::WriteInt(handle, "Grupo", ClanPlayer[playerid][Cp_Grupo]);
+                SQL::WriteInt(handle, "GrupoLider", ClanPlayer[playerid][Cp_Lider]);
                 CuentaInfo[playerid][ID] = SQL::Close(handle);
 
+                SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][1], Necesidades[playerid][N_Hambre]);
+                SetPlayerProgressBarValue(playerid, PlayerProgressBar[playerid][0], Necesidades[playerid][N_Sed]);
+                
                 new handle2 = SQL::Open(SQL::INSERT, "inventario");
                 SQL::WriteInt(handle2, "ID",CuentaInfo[playerid][ID]);
                 SQL::WriteString(handle2, "Nombre", ret_pName(playerid));
@@ -119,21 +126,21 @@ hook Ch_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                 SQL::WriteInt(handle2, "Slot13", VE[playerid][Inv][12]);
                 SQL::WriteInt(handle2, "Slot14", VE[playerid][Inv][13]);
                 SQL::WriteInt(handle2, "Slot15", VE[playerid][Inv][14]);
-                SQL::WriteInt(handle2, "Usos1", Objetos[VE[playerid][Inv][0]][usos]);
-                SQL::WriteInt(handle2, "Usos2", Objetos[VE[playerid][Inv][1]][usos]);
-                SQL::WriteInt(handle2, "Usos3", Objetos[VE[playerid][Inv][2]][usos]);
-                SQL::WriteInt(handle2, "Usos4", Objetos[VE[playerid][Inv][3]][usos]);
-                SQL::WriteInt(handle2, "Usos5", Objetos[VE[playerid][Inv][4]][usos]);
-                SQL::WriteInt(handle2, "Usos6", Objetos[VE[playerid][Inv][5]][usos]);
-                SQL::WriteInt(handle2, "Usos7", Objetos[VE[playerid][Inv][6]][usos]);
-                SQL::WriteInt(handle2, "Usos8", Objetos[VE[playerid][Inv][7]][usos]);
-                SQL::WriteInt(handle2, "Usos9", Objetos[VE[playerid][Inv][8]][usos]);
-                SQL::WriteInt(handle2, "Usos10", Objetos[VE[playerid][Inv][9]][usos]);
-                SQL::WriteInt(handle2, "Usos11", Objetos[VE[playerid][Inv][10]][usos]);
-                SQL::WriteInt(handle2, "Usos12", Objetos[VE[playerid][Inv][11]][usos]);
-                SQL::WriteInt(handle2, "Usos13", Objetos[VE[playerid][Inv][12]][usos]);
-                SQL::WriteInt(handle2, "Usos14", Objetos[VE[playerid][Inv][13]][usos]);
-                SQL::WriteInt(handle2, "Usos15", Objetos[VE[playerid][Inv][14]][usos]);
+                SQL::WriteInt(handle, "Usos1", VE[playerid][usos][VE[playerid][Inv][0]]);
+                SQL::WriteInt(handle, "Usos2", VE[playerid][usos][VE[playerid][Inv][1]]);
+                SQL::WriteInt(handle, "Usos3", VE[playerid][usos][VE[playerid][Inv][2]]);
+                SQL::WriteInt(handle, "Usos4", VE[playerid][usos][VE[playerid][Inv][3]]);
+                SQL::WriteInt(handle, "Usos5", VE[playerid][usos][VE[playerid][Inv][4]]);
+                SQL::WriteInt(handle, "Usos6", VE[playerid][usos][VE[playerid][Inv][5]]);
+                SQL::WriteInt(handle, "Usos7", VE[playerid][usos][VE[playerid][Inv][6]]);
+                SQL::WriteInt(handle, "Usos8", VE[playerid][usos][VE[playerid][Inv][7]]);
+                SQL::WriteInt(handle, "Usos9", VE[playerid][usos][VE[playerid][Inv][8]]);
+                SQL::WriteInt(handle, "Usos10", VE[playerid][usos][VE[playerid][Inv][9]]);
+                SQL::WriteInt(handle, "Usos11", VE[playerid][usos][VE[playerid][Inv][10]]);
+                SQL::WriteInt(handle, "Usos12", VE[playerid][usos][VE[playerid][Inv][11]]);
+                SQL::WriteInt(handle, "Usos13", VE[playerid][usos][VE[playerid][Inv][12]]);
+                SQL::WriteInt(handle, "Usos14", VE[playerid][usos][VE[playerid][Inv][13]]);
+                SQL::WriteInt(handle, "Usos15", VE[playerid][usos][VE[playerid][Inv][14]]);
                 SQL::Close(handle2);
 
                 new handle3 = SQL::Open(SQL::INSERT, "objetosplayer");
@@ -218,7 +225,12 @@ hook Ch_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 }
 stock MostrarPersonalizacion(playerid)
 {
-    
+    new vwa = random(5670);
+    SetPlayerSkin(playerid, 7);
+    SetPlayerVirtualWorld(playerid, vwa);
+    SetPlayerPos(playerid, 2331.3108,-648.2766,958.3655);
+    SetPlayerFacingAngle(playerid,91.6271);
+    SetTimerEx("CinematicaInicio2", 1, false, "d", playerid);
     SendClientMessage(playerid, -1, "{FFC900}• {ffffff}Una vez selecionado el genero no lo podras cambiar");
     for(new i; i < 13; i++)
     {
@@ -233,12 +245,6 @@ stock MostrarPersonalizacion(playerid)
     PlayerTextDrawShow(playerid, finalizar[playerid]);
     SelectTextDraw(playerid, 0xFF6C00FF);
     temp_inmenu_carac[playerid] = true;
-    new vwa = random(5670);
-    SetPlayerSkin(playerid, 7);
-    SetPlayerVirtualWorld(playerid, vwa);
-    SetPlayerPos(playerid, 2331.3108,-648.2766,958.3655);
-    SetPlayerFacingAngle(playerid,91.6271);
-    SetTimerEx("CinematicaInicio2", 1, false, "d", playerid);
 }
 
 forward CinematicaInicio2(playerid);

@@ -150,18 +150,18 @@ stock CrearObjeto(playerid, modeloid, Float:X, Float:Y, Float:Z, Float:rX, Float
             Objetosc[i][O_Rot][2] = rZ;
             Objetosc[i][O_Password] = "0000";
             Objetosc[i][O_gPassword] = 0;
-            Objetosc[i][O_Create] = CreateObject(modeloid, X, Y, Z, rX, rY, rZ, DISTANCIA_DIBUJADO_OBJ);
+            Objetosc[i][O_Create] = CreateDynamicObject(modeloid, X, Y, Z, rX, rY, rZ);
             if(ObjetoConFuncion(modeloid) > 0)
             {
                 new str[128];
                 format(str, 128, "{949090}Usa {14528D}N {949090}para interactuar\n{949090}Resistencia: {14528D}%.0f", Objetosc[i][O_Vida]);
-                Objetosc[i][O_Text] = Create3DTextLabel(str, -1, X, Y, Z, 6.0, 0);
+                Objetosc[i][O_Text] = CreateDynamic3DTextLabel(str, -1, X, Y, Z, 6.0);
             }
             else
             {
                 new str[128];
                 format(str, 128, "{949090}Resistencia: {14528D}%.0f", Objetosc[i][O_Vida]);
-                Objetosc[i][O_Text] = Create3DTextLabel(str, -1, X, Y, Z, 6.0, 0);
+                Objetosc[i][O_Text] = CreateDynamic3DTextLabel(str, -1, X, Y, Z, 6.0);
             }
             break;
         }
@@ -180,13 +180,13 @@ stock MoverObjeto(playerid, pass[] = "")
                 {
                     if(Objetosc[i][O_Abierto] == false)
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
                         Objetosc[i][O_Abierto] = true;
                         break;
                     } 
                     else 
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
                         Objetosc[i][O_Abierto] = false;
                         break;
                     }
@@ -195,13 +195,13 @@ stock MoverObjeto(playerid, pass[] = "")
                 {
                     if(Objetosc[i][O_Abierto] == false)
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
                         Objetosc[i][O_Abierto] = true;
                         break;
                     } 
                     else 
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
                         Objetosc[i][O_Abierto] = false;
                         break;
                     }
@@ -214,13 +214,13 @@ stock MoverObjeto(playerid, pass[] = "")
                 {
                     if(Objetosc[i][O_Abierto] == false)
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2]+4, 1.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2]+4, 1.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
                         Objetosc[i][O_Abierto] = true;
                         break;
                     } 
                     else 
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 1.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 1.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
                         Objetosc[i][O_Abierto] = false;
                         break;
                     }
@@ -229,13 +229,13 @@ stock MoverObjeto(playerid, pass[] = "")
                 {
                     if(Objetosc[i][O_Abierto] == false)
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]+82);
                         Objetosc[i][O_Abierto] = true;
                         break;
                     } 
                     else 
                     {
-                        MoveObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
+                        MoveDynamicObject(Objetosc[i][O_Create], Objetosc[i][O_Pos][0], Objetosc[i][O_Pos][1], Objetosc[i][O_Pos][2], 0.50, Objetosc[i][O_Rot][0], Objetosc[i][O_Rot][1], Objetosc[i][O_Rot][2]);
                         Objetosc[i][O_Abierto] = false;
                         break;
                     }
@@ -261,6 +261,67 @@ stock PonerPass(playerid, pass[5])
         }
     }
 }
+
+stock GuardarObjetosc()
+{
+    new countc;
+    for(new i = 1; i < MAX_OBJETOS_SERVER; i++)
+    {
+        if(Objetosc[i][O_ID] > 0)
+        {
+            new handle2 = SQL::Open(SQL::UPDATE, "objetos", "ID", Objetosc[i][O_ID]);
+            SQL::WriteString(handle2, "Password", Objetosc[i][O_Password]);
+            SQL::WriteFloat(handle2, "Vida", Objetosc[i][O_Vida]);
+            SQL::WriteInt(handle2, "gPassword", Objetosc[i][O_gPassword]);
+            SQL::Close(handle2);
+            countc++;
+        }
+    }
+    printf("[Objetos InGame guardados]: %d", countc);
+}
+
+
+stock CargarObjetosc()
+{
+    new countc;
+    for(new i; i < MAX_OBJETOS_SERVER; i++)
+    {
+        new hand = SQL::Open(SQL::MTREAD, "objetos");
+        new pia;
+        SQL::ReadInt(hand, "ID", pia, i);
+        Objetosc[pia][O_ID] = pia;
+        SQL::ReadInt(hand, "ModelID", Objetosc[pia][O_ModelID], i);
+        SQL::ReadString(hand, "Owner", Objetosc[pia][O_Owner], MAX_PLAYER_NAME, i);
+        SQL::ReadFloat(hand, "Vida", Objetosc[pia][O_Vida], i);
+        SQL::ReadFloat(hand, "PosX", Objetosc[pia][O_Pos][0], i);
+        SQL::ReadFloat(hand, "PosY", Objetosc[pia][O_Pos][1], i);
+        SQL::ReadFloat(hand, "PosZ", Objetosc[pia][O_Pos][2], i);
+        SQL::ReadFloat(hand, "RotX", Objetosc[pia][O_Rot][0], i);
+        SQL::ReadFloat(hand, "RotY", Objetosc[pia][O_Rot][1], i);
+        SQL::ReadFloat(hand, "RotZ", Objetosc[pia][O_Rot][2], i);
+        SQL::ReadString(hand, "Password", Objetosc[pia][O_Password], 5, i);
+        SQL::ReadInt(hand, "gPassword", Objetosc[pia][O_gPassword], i);
+        countc = SQL::Close(hand);
+        if(Objetosc[pia][O_ID] > 0)
+        {
+            Objetosc[pia][O_Create] = CreateDynamicObject(Objetosc[pia][O_ModelID], Objetosc[pia][O_Pos][0], Objetosc[pia][O_Pos][1], Objetosc[pia][O_Pos][2], Objetosc[pia][O_Rot][0], Objetosc[pia][O_Rot][1], Objetosc[pia][O_Rot][2]);
+            if(ObjetoConFuncion(Objetosc[pia][O_ModelID]) > 0)
+            {
+                new str[128];
+                format(str, 128, "{949090}Usa {14528D}N {949090}para interactuar\n{949090}Resistencia: {14528D}%.0f", Objetosc[pia][O_Vida]);
+                Objetosc[pia][O_Text] = CreateDynamic3DTextLabel(str, -1, Objetosc[pia][O_Pos][0], Objetosc[pia][O_Pos][1], Objetosc[pia][O_Pos][2], 6.0);
+            }
+            else
+            {
+                new str[128];
+                format(str, 128, "{949090}Resistencia: {14528D}%.0f", Objetosc[pia][O_Vida]);
+                Objetosc[pia][O_Text] = CreateDynamic3DTextLabel(str, -1, Objetosc[pia][O_Pos][0], Objetosc[pia][O_Pos][1], Objetosc[pia][O_Pos][2], 6.0);
+            }
+        }
+    }
+    printf("[Objetos InGame Cargados]: %d", countc);
+}
+
 ObjetoConFuncion(objectid)
 {
     switch(objectid)

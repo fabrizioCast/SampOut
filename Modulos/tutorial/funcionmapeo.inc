@@ -15,10 +15,10 @@ forward VaultStopped();
 hook:OnGameModeInit()
 {
     CargarMapeoTuto();
-	Create3DTextLabel("Preciona [{FF6C00}H{FFFFFF}] para interactuar", -1, 2348.1279,-693.4337,117.3094, 5.0, 0);
-	Create3DTextLabel("Preciona [{FF6C00}H{FFFFFF}] para interactuar", -1, 2352.8789,-674.0874,116.6405, 5.0, 0);
-	Create3DTextLabel("Preciona [{FF6C00}H{FFFFFF}] para interactuar", -1, 2352.7734,-685.5914,117.3035, 5.0, 0);
-	Create3DTextLabel("Preciona [{FF6C00}H{FFFFFF}] para interactuar", -1, 2357.3994,-648.3740,128.4521, 5.0, 0);
+	Create3DTextLabel("Preciona {FFC900}H{FFFFFF} para interactuar", -1, 2348.1279,-693.4337,117.3094, 5.0, 0);
+	Create3DTextLabel("Preciona {FFC900}H{FFFFFF} para interactuar", -1, 2352.8789,-674.0874,116.6405, 5.0, 0);
+	Create3DTextLabel("Preciona {FFC900}H{FFFFFF} para interactuar", -1, 2352.7734,-685.5914,117.3035, 5.0, 0);
+	Create3DTextLabel("Preciona {FFC900}H{FFFFFF} para interactuar", -1, 2357.3994,-648.3740,128.4521, 5.0, 0);
 }
 
 hook OnPlayerConnect(playerid)
