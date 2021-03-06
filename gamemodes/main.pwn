@@ -83,8 +83,8 @@ public OnGameModeInit()
     DisableInteriorEnterExits();
     CargarApariencia();
     O_infloor = 0;
-    //____________________________________//
     ObjetosSelection_Puertas = LoadModelSelectionMenu("Objetos_Puertas.txt");
+    ObjetosSelection_Vallas = LoadModelSelectionMenu("Objetos_Vallas.txt");
     CargarObjetosc();
     return 1;
 }

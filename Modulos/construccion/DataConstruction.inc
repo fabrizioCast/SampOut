@@ -8,6 +8,7 @@
 */
 
 new ObjetosSelection_Puertas = mS_INVALID_LISTID;
+new ObjetosSelection_Vallas = mS_INVALID_LISTID;
 
 enum ObjetosIC{
     O_ID,

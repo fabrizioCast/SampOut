@@ -7,6 +7,7 @@ CMD:construir(playerid)
     TogglePlayerControllable(playerid, 0);
     ShowPlayerMenu(playerid, construccionc, "Construccion", "Elige la categoria", 0xf7f7f7ff, 0x463B31FF);
     AddPlayerMenuItem(playerid, "Puertas y Rejas", "Categorias de puertas y rejas");
+    AddPlayerMenuItem(playerid, "Vallas", "Categorias de vallas y cercas");
     return 1;
 }
 
@@ -23,6 +24,11 @@ MENU:construccionc(playerid, response, listitem)
                 ShowModelSelectionMenu(playerid, ObjetosSelection_Puertas, "Puertas y Rejas", 0x0E0E0F33, 0x14131333 , 0xB72020F0);
                 TogglePlayerControllable(playerid, 1);
             }
+            case 1:
+            {
+                ShowModelSelectionMenu(playerid, ObjetosSelection_Vallas, "Vallas", 0x0E0E0F33, 0x14131333 , 0xB72020F0);
+                TogglePlayerControllable(playerid, 1);
+            }
         }
         case MENU_RESPONSE_CLOSE:
         {
@@ -36,11 +42,26 @@ public OnPlayerModelSelection(playerid, response, listid, modelidd)
 {
     if(response)
     {
+        new Float:p[9];
+        const Float:Fscale = 5.0;
         if(listid == ObjetosSelection_Puertas)
         {
-            new Float:p[3];
-            GetPlayerPos(playerid, p[0], p[1], p[2]);
-            Objeto_Temp_Create[playerid] = CreateObject(modelidd, p[0]+5, p[1], p[2], 0, 0, 0, DISTANCIA_DIBUJADO_OBJ);
+            GetPlayerCameraPos(playerid, p[0], p[1], p[2]);
+            GetPlayerCameraFrontVector(playerid, p[3], p[4], p[5]);
+            p[6] = p[0] + floatmul(p[3], Fscale);
+            p[7] = p[1] + floatmul(p[4], Fscale);
+            p[8] = p[2] + floatmul(p[5], Fscale);
+            Objeto_Temp_Create[playerid] = CreateObject(modelidd, p[6], p[7], p[8], 0, 0, 0, DISTANCIA_DIBUJADO_OBJ);
+            EditObject(playerid, Objeto_Temp_Create[playerid]);
+        }
+        if(listid == ObjetosSelection_Vallas)
+        {
+            GetPlayerCameraPos(playerid, p[0], p[1], p[2]);
+            GetPlayerCameraFrontVector(playerid, p[3], p[4], p[5]);
+            p[6] = p[0] + floatmul(p[3], Fscale);
+            p[7] = p[1] + floatmul(p[4], Fscale);
+            p[8] = p[2] + floatmul(p[5], Fscale);
+            Objeto_Temp_Create[playerid] = CreateObject(modelidd, p[6], p[7], p[8], 0, 0, 0, DISTANCIA_DIBUJADO_OBJ);
             EditObject(playerid, Objeto_Temp_Create[playerid]);
         }
     }
@@ -154,14 +175,14 @@ stock CrearObjeto(playerid, modeloid, Float:X, Float:Y, Float:Z, Float:rX, Float
             if(ObjetoConFuncion(modeloid) > 0)
             {
                 new str[128];
-                format(str, 128, "{949090}Usa {14528D}N {949090}para interactuar\n{949090}Resistencia: {14528D}%.0f", Objetosc[i][O_Vida]);
-                Objetosc[i][O_Text] = CreateDynamic3DTextLabel(str, -1, X, Y, Z, 6.0);
+                format(str, 128, "Resistencia: %.0f\nDueño: %s", Objetosc[i][O_Vida], Objetosc[i][O_Owner]);
+                Objetosc[i][O_Text] = CreateDynamic3DTextLabel(str, 0x9C939399, X, Y, Z, 6.0);
             }
             else
             {
                 new str[128];
-                format(str, 128, "{949090}Resistencia: {14528D}%.0f", Objetosc[i][O_Vida]);
-                Objetosc[i][O_Text] = CreateDynamic3DTextLabel(str, -1, X, Y, Z, 6.0);
+                format(str, 128, "Resistencia: %.0f\nDueño: %s", Objetosc[i][O_Vida], Objetosc[i][O_Owner]);
+                Objetosc[i][O_Text] = CreateDynamic3DTextLabel(str, 0x9C939399, X, Y, Z, 6.0);
             }
             break;
         }
@@ -308,26 +329,27 @@ stock CargarObjetosc()
             if(ObjetoConFuncion(Objetosc[pia][O_ModelID]) > 0)
             {
                 new str[128];
-                format(str, 128, "{949090}Usa {14528D}N {949090}para interactuar\n{949090}Resistencia: {14528D}%.0f", Objetosc[pia][O_Vida]);
-                Objetosc[pia][O_Text] = CreateDynamic3DTextLabel(str, -1, Objetosc[pia][O_Pos][0], Objetosc[pia][O_Pos][1], Objetosc[pia][O_Pos][2], 6.0);
+                format(str, 128, "Resistencia: %.0f\nDueño: %s", Objetosc[pia][O_Vida], Objetosc[pia][O_Owner]);
+                Objetosc[pia][O_Text] = CreateDynamic3DTextLabel(str, 0x9C939399, Objetosc[pia][O_Pos][0], Objetosc[pia][O_Pos][1], Objetosc[pia][O_Pos][2], 6.0);
             }
             else
             {
                 new str[128];
-                format(str, 128, "{949090}Resistencia: {14528D}%.0f", Objetosc[pia][O_Vida]);
-                Objetosc[pia][O_Text] = CreateDynamic3DTextLabel(str, -1, Objetosc[pia][O_Pos][0], Objetosc[pia][O_Pos][1], Objetosc[pia][O_Pos][2], 6.0);
+                format(str, 128, "Resistencia: %.0f\nDueño: %s", Objetosc[pia][O_Vida], Objetosc[pia][O_Owner]);
+                Objetosc[pia][O_Text] = CreateDynamic3DTextLabel(str, 0x9C939399, Objetosc[pia][O_Pos][0], Objetosc[pia][O_Pos][1], Objetosc[pia][O_Pos][2], 6.0);
             }
         }
     }
     printf("[Objetos InGame Cargados]: %d", countc);
 }
 
+
 ObjetoConFuncion(objectid)
 {
     switch(objectid)
     {
-        case 1497,1495,1498,1505,1506,1507,1537: return 1;
-        case 980,975,987,1412,1413,3850,1408: return 2;
+        case 1497,1495,1498,1504,1505,1506,1507,1537,2949: return 1; //Puertas
+        case 980,975,971: return 2; //Rejas
     }
     return 0;
 }
