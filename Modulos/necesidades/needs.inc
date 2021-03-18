@@ -1,13 +1,5 @@
 #include "YSI\y_hooks"
 
-new PlayerBar:PlayerProgressBar[MAX_PLAYERS][2];
-
-enum necesidades{
-    Float:N_Hambre,
-    Float:N_Sed,
-    TimmerNecesidades
-};
-new Necesidades[MAX_PLAYERS][necesidades];
 
 hook Ned_OnPlayerConnect(playerid)
 {

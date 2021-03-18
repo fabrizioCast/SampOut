@@ -12,9 +12,18 @@ public OnPlayerEnterDynamicArea(playerid, areaid)
             new str[128];
             format(str, 128, "{FFC900}• {ffffff}Entraste al territorio del grupo {%06x}%s", Clanes[i][C_Color] >>> 8, Clanes[i][C_Nombre]);
             SendClientMessage(playerid, -1, str);
+            if(Clanes[i][C_AreaID] ==  Clanes[ ClanPlayer[playerid][Cp_ID] ][C_AreaID])
+            {
+                TempPlayer[playerid][puedeconstruir] = true;
+            }
             break;
         }
     }
+}
+
+public OnPlayerLeaveDynamicArea(playerid, areaid)
+{
+    TempPlayer[playerid][puedeconstruir] = false;
 }
 
 stock CrearTerritorio(playerid)
@@ -69,7 +78,7 @@ stock MostrarTerritorios(playerid)
 }
 
 
-PuedeReclamarTerritorio(playerid)
+stock PuedeReclamarTerritorio(playerid)
 {
     new Float:pos_temp[3], a;
     GetPlayerPos(playerid, pos_temp[0], pos_temp[1], pos_temp[2]);
@@ -89,9 +98,4 @@ stock ActualizarColorTerritorio(playerid)
     HexToRGBA(Clanes[ ClanPlayer[playerid][Cp_ID] ][C_Color], r, g, b, a);
     color_terri = RGBAToHex(r, g, b, 135);
     GangZoneShowForAll(Clanes[ ClanPlayer[playerid][Cp_ID] ][C_GangZone], color_terri);
-}
-
-stock MoverTerritorio(playerid)
-{
-    
 }

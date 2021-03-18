@@ -3,8 +3,6 @@
 #define MAX_LOOT_MADERA 200
 #define MAX_LOOT_HIERRO 200
 
-
-
 enum LootMadera{
     M_ID,
     M_ModelID,
@@ -28,14 +26,14 @@ new HierroLoot[MAX_LOOT_HIERRO][LootHierro];
 new counthierro;
 
 
-
 CMD:recurso(playerid, params[1])
 {
     if(sscanf(params, "d", params[0])) return ShowInfoForPlayer(playerid, "Uso: /recurso [tipo]", 3000);
     CreateResourse(playerid, params[0]);
     return 1;
 }
-hook:OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
+
+hook OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 {
     if(PRESSED(KEY_NO))
     {
@@ -170,6 +168,7 @@ stock DestroyResource(type, id)
     }
     return 1;
 }
+
 forward RespawnResource(type, id);
 public RespawnResource(type, id)
 {
@@ -210,7 +209,6 @@ stock CargarRecursos()
         MaderaLoot[pia][M_ModelID] = CreateObject(MaderaLoot[pia][M_Create], MaderaLoot[pia][M_Pos][0], MaderaLoot[pia][M_Pos][1], MaderaLoot[pia][M_Pos][2], 0.0, 0.0, 0.0, 250.00);
         MaderaLoot[pia][M_Text] = Create3DTextLabel("Preciona {D54028}[N] {ffffff}para comenzar a talar este arbol", -1, MaderaLoot[pia][M_Pos][0], MaderaLoot[pia][M_Pos][1], MaderaLoot[pia][M_Pos][2], 5.0, 0);
     }
-    printf("[Arboles Cargados]: %d", countwood);
     for(new i; i < MAX_LOOT_HIERRO; i++)
     {
         new hand = SQL::Open(SQL::MTREAD, "hierro");
@@ -225,7 +223,6 @@ stock CargarRecursos()
         HierroLoot[pia][H_ModelID] = CreateObject(HierroLoot[pia][H_Create], HierroLoot[pia][H_Pos][0], HierroLoot[pia][H_Pos][1], HierroLoot[pia][H_Pos][2], 0.0, 0.0, 0.0, 250.00);
         HierroLoot[pia][H_Text] = Create3DTextLabel("Preciona {D54028}[N] {ffffff}para comenzar a minar hierro", -1, HierroLoot[pia][H_Pos][0], HierroLoot[pia][H_Pos][1], HierroLoot[pia][H_Pos][2], 5.0, 0);
     }
-    printf("[Hierros Cargados]: %d", counthierro);
     new total = counthierro + countwood;
     printf("[Recursos Total]: %d", total);
     return 1;

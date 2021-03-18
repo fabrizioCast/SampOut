@@ -1,6 +1,6 @@
 
 #define MAX_OBJETOS_WORDl 2000
-#define MAX_INV 15 //Lo maximo que puedes llevar en el inventario (Tiene que ir en corelacion al textdraw)
+#define MAX_INV 15 //Lo maximo que puedes llevar en el inventario (Tiene que ir en correlacion al textdraw)
 #define MAX_OBJETOS 17 //Maximo de objetos creados
 #define IZQ 1 //Mano izquierda
 #define DER 0 // Mano derecha
@@ -38,12 +38,12 @@ new InvSelect[MAX_PLAYERS];
 
 enum Inventory{
     bool:inmenu,
-    Inv[17],
+    Inv[18],
     Mano[2],
     Selected,
     weapon[4],
     ammo[4],
-    usos[17],
+    usos[18],
     usosder,
     usosizq
 };
@@ -72,6 +72,7 @@ enum ObjetosWordl{
     usos
 };
 new ObjetosPiso[MAX_OBJETOS_WORDl][ObjetosWordl];
+
 
 
 new Objetos[][ObjetosEnum] =

@@ -48,13 +48,15 @@ public OnPlayerFinishProgress(playerid, typer)
 {
     if(typer == 0)
     {
-       GiveItem(playerid, 2, 4);
+       GiveItem(playerid, 2, 2);
        DestroyResource(typer, resourceids[playerid]);
+       ShowInfoForPlayer(playerid, "~b~+2 madera!", 3000);
     }
     if(typer == 1)
     {
        GiveItem(playerid, 3, 2);
        DestroyResource(typer, resourceids[playerid]);
+       ShowInfoForPlayer(playerid, "~b~+2 mina de hierro!", 3000);
     }
     TogglePlayerControllable(playerid, 1);
     ApplyAnimation(playerid, "BOMBER", "BOM_PLANT", 4.1, 0, 0, 0, 0, 0);

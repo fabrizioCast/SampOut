@@ -6,8 +6,6 @@
 
 #include <YSI\y_hooks>
 
-#include "../Modulos/Server/prox.inc"
-#include "../Modulos/inicio/Commands.inc"
 //------------------CALLBACKS-----------------//
 
 

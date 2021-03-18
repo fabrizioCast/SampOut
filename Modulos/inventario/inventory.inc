@@ -11,7 +11,6 @@
 //__________________I N C L U D E S___________________//
 
 #include  <YSI\y_hooks>
-#include "../Modulos/inventario/InvData.inc"
 #include "../Modulos/inventario/oFunctions.inc"
 
 
@@ -49,6 +48,8 @@ hook Inv_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                     if(VE[playerid][usos][VE[playerid][Inv][i]] == 1)
                     {
                         VE[playerid][Inv][i] = NADA;
+                        VE[playerid][usos][ VE[playerid][Inv][ VE[playerid][Inv][i]] ] = 0;
+                        SendClientMessageEx(playerid, -1, "Uso: %d", VE[playerid][usos][ VE[playerid][Inv][ VE[playerid][Inv][i]] ] );
                         DropObjeto(playerid, InvSelect[playerid], 1);
                         closeInv(playerid);
                         OpenInv(playerid);
@@ -57,7 +58,8 @@ hook Inv_OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
                     else
                     {
                         ShowPlayerDialog(playerid, tirar_dialog, DIALOG_STYLE_INPUT, "Tirar Objeto", "Ingresa la cantidad que deseas tirar", "Aceptar", "Salir");
-                        temp_tirar[playerid] = VE[playerid][Inv][i];
+                        temp_tirar[playerid] = i;
+                        SendClientMessageEx(playerid, -1, "Inv:%d Tirar:%d Total: %d", VE[playerid][Inv][i], temp_tirar[playerid], VE[playerid][Inv][temp_tirar[playerid]]);
                         break;
                     }
                 }
@@ -221,16 +223,17 @@ hook Inv_OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         if(response)
         {
+            SendClientMessageEx(playerid, -1, "Tirar:%d", VE[playerid][usos][temp_tirar[playerid]]);
             new temp_cantidad_tirar = strval(inputtext);
             if(temp_cantidad_tirar > 0)
             {
-                if(temp_cantidad_tirar <= VE[playerid][usos][ temp_tirar[playerid] ])
+                if(temp_cantidad_tirar <= VE[playerid][usos][ VE[playerid][Inv][temp_tirar[playerid]] ])
                 {
-                    //Objetos[VE[playerid][Inv][temp_tirar[playerid]]][usos] 
-                    VE[playerid][usos][ temp_tirar[playerid] ] -= temp_cantidad_tirar;
-                    if(VE[playerid][usos][ temp_tirar[playerid] ] == 0)
+                    VE[playerid][usos][ VE[playerid][Inv][temp_tirar[playerid]] ] -= temp_cantidad_tirar;
+                    if(VE[playerid][usos][ VE[playerid][Inv][temp_tirar[playerid]] ] == 0)
                     {
-                        VE[playerid][Inv][ temp_tirar[playerid] ] = NADA;
+                        VE[playerid][Inv][temp_tirar[playerid]] = NADA;
+                        SendClientMessageEx(playerid, -1, "Tirar:%d", temp_tirar[playerid]);
                     }
                     DropObjeto(playerid, InvSelect[playerid], temp_cantidad_tirar);
                     closeInv(playerid);
@@ -280,7 +283,7 @@ CMD:darobjeto(playerid, params[2])
 {
     if(sscanf(params, "dd", params[0], params[1])) return SendClientMessage(playerid, -1, "Error /darobjeto [ID] [Cantidad]");
     {
-        if(params[1] <= MAX_OBJETOS)
+        if(params[0] <= MAX_OBJETOS)
         {
             GiveItemAdmin(playerid, params[0], params[1]);
         }
@@ -333,7 +336,6 @@ stock GiveItemAdmin(playerid, itemidd, cantidad)
             if(VE[playerid][Inv][i] == itemidd)
             {
                 VE[playerid][usos][VE[playerid][Inv][i]] += cantidad;
-                //Objetos[ VE[playerid][Inv][i] ][usos] += cantidad;
                 new mensaje[128];
                 format(mensaje, sizeof(mensaje), "Un administrador te dio el objeto: {154265}%s (%d)", Objetos[VE[playerid][Inv][i]][name], VE[playerid][usos][VE[playerid][Inv][i]]);
                 SendClientMessage(playerid, -1, mensaje);
@@ -343,7 +345,6 @@ stock GiveItemAdmin(playerid, itemidd, cantidad)
             else if(VE[playerid][Inv][i] == 0)
             {
                 VE[playerid][Inv][i] = itemidd;
-                //Objetos[ VE[playerid][Inv][i] ][usos] += cantidad-1;
                 VE[playerid][usos][VE[playerid][Inv][i]] += cantidad-1;
                 new mensaje[128];
                 format(mensaje, sizeof(mensaje), "Un administrador te dio el objeto: {154265}%s (%d)", Objetos[VE[playerid][Inv][i]][name], VE[playerid][usos][VE[playerid][Inv][i]]);

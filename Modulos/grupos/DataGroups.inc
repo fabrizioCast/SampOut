@@ -25,7 +25,6 @@ enum ClanP{
 };
 new ClanPlayer[MAX_PLAYERS][ClanP];
 
-
 new countclanes;
 
 //___________Colores________________//
